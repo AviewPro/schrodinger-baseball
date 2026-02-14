@@ -217,7 +217,7 @@
     <div id="obs-input-container" class="panel-center">
         <h2 style="color:var(--purple); font-size:5vh; margin-bottom:0;">Observation</h2>
         <p style="color:var(--purple); font-size:2vh;">양자고양이의 좌표를 관측하세요!</p>
-        <input type="tel" id="obs-num" maxlength="4" 
+        <input type="tel" id="obs-num" maxlength="4" autocomplete="off"
                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                style="background:#000; color:#fff; font-size:5vh; text-align:center; width:35vh; margin:4vh 0; border:0.3vh solid var(--purple); border-radius:1.5vh; letter-spacing:1.5vh;">
         <button onclick="submitObs()" style="padding:2.5vh 8vh; background:var(--purple); color:#fff; font-weight:bold; font-size:2.5vh; border-radius:1.5vh;">관측 실행</button>
@@ -319,13 +319,13 @@
 
         if (tutorialStep === 1) {
             title.innerText = "1. 숫자 입력";
-            desc.innerHTML = "입력 패널의 버튼을 눌러서<br>임의의 4자리 수를 입력해보세요.";
+            desc.innerHTML = "입력 패널의 버튼을 눌러서<br>입력하거나 키보드 숫자키를 활용해<br>임의의 4자리 수를 입력해보세요.";
             document.getElementById('game-box').classList.remove('tutorial-dim');
             document.querySelectorAll('.key-btn, #zero-btn, #display').forEach(el => el.classList.add('tutorial-highlight'));
             nextBtn.innerText = "확인";
         } else if (tutorialStep === 2) {
             title.innerText = "2. 양자고양이 좌표 측정";
-            desc.innerHTML = "입력 패널의 엔터키를 통해서 양자 고양이의 좌표를 측정하세요.<br>고양이가 숨어있는 4자리 좌표를 찾으면 됩니다.";
+            desc.innerHTML = "입력 패널의 엔터키나 키보드 Enter를 통해서 양자 고양이의 좌표를 측정하세요.<br>고양이가 숨어있는 4자리 좌표를 찾으면 됩니다.";
             document.getElementById('game-box').classList.remove('tutorial-dim');
             document.getElementById('ent-btn').classList.add('tutorial-highlight');
             document.getElementById('clr-btn').classList.add('tutorial-highlight');
@@ -362,9 +362,23 @@
     }
 
     window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && isTutorial) {
-            location.reload(); 
+        if (e.key === 'Escape') {
+            if (isTutorial) location.reload();
+            if (document.getElementById('obs-overlay').style.display === 'flex') {
+                document.getElementById('obs-overlay').style.display = 'none';
+            }
+            return;
         }
+
+        // 관측 모드 입력 중에는 키보드 이벤트 분리
+        if (document.getElementById('obs-overlay').style.display === 'flex') {
+            if (e.key === 'Enter') submitObs();
+            return;
+        }
+
+        if (e.key >= '0' && e.key <= '9') press(e.key);
+        if (e.key === 'Enter') clickEnter();
+        if (e.key === 'Delete' || e.key === 'Backspace') clearIn();
     });
 
     function press(n) { 
@@ -478,7 +492,7 @@
             document.getElementById('status').innerText = "측정 소진 (관측만 가능)";
         } else {
             entBtn.disabled = false;
-            document.getElementById('status').innerText = "고양이 위치 관측 중...";
+            document.getElementById('status').innerText = "고양이 좌표 측정 중...";
         }
     }
 
@@ -514,6 +528,12 @@
         }
         renderProbabilityCloud();
         document.getElementById('obs-overlay').style.display = 'flex';
+        // 관측창 열릴 때 포커스 및 이전 값 제거
+        setTimeout(() => {
+            const obsInput = document.getElementById('obs-num');
+            obsInput.value = "";
+            obsInput.focus();
+        }, 10);
     }
 
     function submitObs() {
