@@ -385,7 +385,7 @@
         const turnCounter = document.getElementById('turn-counter');
         if(turnCounter) {
             if (turnCount > 0) {
-                const intensity = (8 - turnCount) * 0.4 + 0.5; // 턴이 줄어들수록 움직임 반경 증가
+                const intensity = (8 - turnCount) * 40 + 0.5; // 턴이 줄어들수록 움직임 반경 증가
                 const tMoveX = (Math.random()-0.5) * intensity;
                 const tMoveY = (Math.random()-0.5) * intensity;
                 turnCounter.style.transform = `translate(${tMoveX}vh, ${tMoveY}vh)`;
