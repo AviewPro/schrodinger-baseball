@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <title>Schrödinger Baseball - Single Mode</title>
     <style>
-        :root { --bg: #050507; --cyan: #00f2ff; --purple: #bc13fe; --green: #00ff41; --red: #ff4b2b; }
+        :root { 
+            --bg: #050507; --cyan: #00f2ff; --purple: #bc13fe; --green: #00ff41; --red: #ff4b2b; 
+            /* 기본 스케일 정의: 1080p 세로 기준 */
+            --unit: 1vh; 
+        }
         
         body { 
             background: linear-gradient(rgba(5, 5, 7, 0.8), rgba(5, 5, 7, 0.8)), 
@@ -17,87 +21,81 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: flex-start; 
+            justify-content: center; /* 중앙 정렬 강화 */
             min-height: 100vh; 
             margin: 0; 
-            overflow-x: hidden; 
-            overflow-y: auto; 
-            padding-top: 20px; 
+            overflow: hidden; /* 빈 공간 최소화 및 스크롤 억제 */
+            padding: 0;
             user-select: none;
             -webkit-user-select: none;
         }
         
-        #sound-control { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; background: rgba(0,0,0,0.7); padding: 15px 10px; border-radius: 30px; border: 1px solid var(--cyan); z-index: 3000; }
-        #sound-control input[type=range] { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 8px; height: 150px; cursor: pointer; }
-        .sound-icon { font-size: 1.2rem; color: var(--cyan); }
+        #sound-control { position: fixed; right: 2vh; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 1vh; background: rgba(0,0,0,0.7); padding: 1.5vh 1vh; border-radius: 3vh; border: 0.1vh solid var(--cyan); z-index: 3000; }
+        #sound-control input[type=range] { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 0.8vh; height: 15vh; cursor: pointer; }
+        .sound-icon { font-size: 1.5vh; color: var(--cyan); }
 
-        .title-wrapper { position: relative; margin-bottom: 30px; z-index: 300; display: flex; justify-content: center; align-items: center; }
-        .title-bg { position: absolute; background: rgba(0, 0, 0, 0.7); width: 120%; height: 120%; border-radius: 15px; filter: blur(5px); z-index: -1; }
-        .header-title { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: bold; letter-spacing: 12px; text-shadow: 0 0 20px currentColor; animation: neonShift 10s infinite alternate linear; text-align: center; margin: 0; padding: 10px 40px; }
+        .title-wrapper { position: relative; margin-bottom: 3vh; z-index: 300; display: flex; justify-content: center; align-items: center; }
+        .title-bg { position: absolute; background: rgba(0, 0, 0, 0.7); width: 120%; height: 120%; border-radius: 1.5vh; filter: blur(0.5vh); z-index: -1; }
+        .header-title { font-size: 5vh; font-weight: bold; letter-spacing: 1.2vh; text-shadow: 0 0 2vh currentColor; animation: neonShift 10s infinite alternate linear; text-align: center; margin: 0; padding: 1vh 4vh; }
         
-        @keyframes neonShift { 0% { color: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan); } 100% { color: var(--purple); border-color: var(--purple); box-shadow: 0 0 20px var(--purple); } }
-        @keyframes neonShiftBg { 0% { background-color: var(--cyan); box-shadow: 0 0 15px var(--cyan); } 100% { background-color: var(--purple); box-shadow: 0 0 15px var(--purple); } }
+        @keyframes neonShift { 0% { color: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 2vh var(--cyan); } 100% { color: var(--purple); border-color: var(--purple); box-shadow: 0 0 2vh var(--purple); } }
+        @keyframes neonShiftBg { 0% { background-color: var(--cyan); box-shadow: 0 0 1.5vh var(--cyan); } 100% { background-color: var(--purple); box-shadow: 0 0 1.5vh var(--purple); } }
 
         @keyframes keyholeNeonShift { 
-            0% { filter: drop-shadow(0 0 15px var(--cyan)) drop-shadow(0 0 30px var(--cyan)); } 
-            100% { filter: drop-shadow(0 0 15px var(--purple)) drop-shadow(0 0 30px var(--purple)); } 
+            0% { filter: drop-shadow(0 0 1.5vh var(--cyan)) drop-shadow(0 0 3vh var(--cyan)); } 
+            100% { filter: drop-shadow(0 0 1.5vh var(--purple)) drop-shadow(0 0 3vh var(--purple)); } 
         }
 
-        .game-container { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; justify-content: center; width: 95%; max-width: 1400px; padding-bottom: 50px; }
+        .game-container { display: flex; flex-wrap: nowrap; gap: 3vh; align-items: center; justify-content: center; width: 95%; height: 75vh; }
         
-        #setup { width: 500px; height: 680px; padding: 40px; border-radius: 25px; background: rgba(10, 10, 15, 0.95); border: 3px solid var(--cyan); z-index: 200; text-align: center; box-sizing: border-box; box-shadow: 0 0 30px rgba(0, 242, 255, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #setup { width: 50vh; height: 68vh; padding: 4vh; border-radius: 2.5vh; background: rgba(10, 10, 15, 0.95); border: 0.4vh solid var(--cyan); z-index: 200; text-align: center; box-sizing: border-box; box-shadow: 0 0 3vh rgba(0, 242, 255, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .setup-box-container { position: relative; width: 330px; margin-bottom: 25px; }
-        .setup-cat { width: 330px; height: 330px; border-radius: 40px; border: 4px solid var(--green); object-fit: cover; animation: neonShift 10s infinite alternate linear; display: block; }
+        .setup-box-container { position: relative; width: 35vh; margin-bottom: 2.5vh; }
+        .setup-cat { width: 35vh; height: 35vh; border-radius: 4vh; border: 0.4vh solid var(--green); object-fit: cover; animation: neonShift 10s infinite alternate linear; display: block; }
         
-        .setup-btn { width: 330px; color: #000; font-weight: 900; height: 60px; font-size: 1.3rem; border-radius: 15px; cursor: pointer; border: none; animation: neonShiftBg 10s infinite alternate linear; }
+        .setup-btn { width: 35vh; color: #000; font-weight: 900; height: 7vh; font-size: 2.2vh; border-radius: 1.5vh; cursor: pointer; border: none; animation: neonShiftBg 10s infinite alternate linear; }
 
-        .new-keyhole { width: 330px; height: auto; margin-top: 20px; animation: keyholeNeonShift 10s infinite alternate linear; }
+        .new-keyhole { width: 35vh; height: auto; margin-top: 2vh; animation: keyholeNeonShift 10s infinite alternate linear; }
 
-        #game-box, #info-panel { width: 500px; height: 700px; padding: 25px; border-radius: 25px; box-sizing: border-box; display: flex; flex-direction: column; }
-        #game-box { background: rgba(17, 17, 17, 0.9); border: 1px solid #333; position: relative; display: none; }
-        #info-panel { background: rgba(10, 10, 15, 0.9); border: 1px solid #333; display: none; }
+        #game-box, #info-panel { width: 50vh; height: 75vh; padding: 2.5vh; border-radius: 2.5vh; box-sizing: border-box; display: flex; flex-direction: column; }
+        #game-box { background: rgba(17, 17, 17, 0.9); border: 0.1vh solid #333; position: relative; display: none; }
+        #info-panel { background: rgba(10, 10, 15, 0.9); border: 0.1vh solid #333; display: none; }
         
-        .status { text-align:center; color:var(--cyan); margin-bottom:15px; font-weight:bold; height:30px; font-size: 1.5rem; }
-        #log-window { flex-grow: 1; background: #000; overflow-y: auto; padding: 10px; font-family: 'Consolas', monospace; margin-bottom: 15px; border: 1px inset #222; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 65px; gap: 0px; align-content: start; }
-        .log-item { padding: 5px; display: flex; flex-direction: column; justify-content: center; background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-bottom: 1px solid #222; position: relative; box-sizing: border-box; text-align: center; }
-        .log-item:nth-child(odd) { border-right: 1px solid #333; }
-        .log-n { font-size: 1.6rem; font-weight: bold; display: block; letter-spacing: 2px; }
-        .log-sb { font-weight: bold; font-size: 1.1rem; color: var(--purple); margin-top: 2px; }
-        .log-out { color: var(--red); text-shadow: 0 0 10px var(--red); }
+        .status { text-align:center; color:var(--cyan); margin-bottom:1.5vh; font-weight:bold; height:3vh; font-size: 2.2vh; }
+        #log-window { flex-grow: 1; background: #000; overflow-y: auto; padding: 1vh; font-family: 'Consolas', monospace; margin-bottom: 1.5vh; border: 0.1vh inset #222; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 7vh; gap: 0px; align-content: start; }
+        .log-item { padding: 0.5vh; display: flex; flex-direction: column; justify-content: center; background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-bottom: 0.1vh solid #222; position: relative; box-sizing: border-box; text-align: center; }
+        .log-item:nth-child(odd) { border-right: 0.1vh solid #333; }
+        .log-n { font-size: 2.5vh; font-weight: bold; display: block; letter-spacing: 0.2vh; }
+        .log-sb { font-weight: bold; font-size: 1.5vh; color: var(--purple); margin-top: 0.2vh; }
+        .log-out { color: var(--red); text-shadow: 0 0 1vh var(--red); }
 
-        .chance-area { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; gap: 20px; height: 145px; position: relative; }
-        #chance-box { background: rgba(0,0,0,0.6); padding: 10px; border-radius: 20px; border: 2px solid var(--purple); text-align: center; flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; transition: border-color 0.5s; z-index: 5; }
-        .chance-title { font-size: 1rem; color: var(--purple); font-weight: bold; display: block; margin-bottom: 5px; transition: color 0.5s, font-size 0.5s; }
-        .chance-value { font-size: 3.5rem; font-weight: 900; color: var(--purple); text-shadow: 0 0 25px var(--purple); font-family: 'Consolas', monospace; line-height: 1.1; transition: color 0.5s; }
-        .poison-text { font-size: 1.87rem; letter-spacing: -1px; line-height: 1.2; } 
+        .chance-area { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5vh; gap: 2vh; height: 16vh; position: relative; }
+        #chance-box { background: rgba(0,0,0,0.6); padding: 1vh; border-radius: 2vh; border: 0.2vh solid var(--purple); text-align: center; flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; transition: border-color 0.5s; z-index: 5; }
+        .chance-title { font-size: 1.2vh; color: var(--purple); font-weight: bold; display: block; margin-bottom: 0.5vh; }
+        .chance-value { font-size: 4.5vh; font-weight: 900; color: var(--purple); text-shadow: 0 0 2.5vh var(--purple); font-family: 'Consolas', monospace; line-height: 1.1; }
+        .poison-text { font-size: 2vh; letter-spacing: -0.1vh; line-height: 1.2; } 
 
-        .prob-cat-container { position: relative; width: 145px; height: 145px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: visible; }
-        .prob-cat { width: 100%; height: 100%; border-radius: 25px; border: 2px solid var(--purple); object-fit: cover; transition: opacity 0.5s, filter 0.5s, border-color 0.5s; box-sizing: border-box; z-index: 1; }
-        #turn-counter { position: absolute; font-weight: 900; font-size: 6rem; z-index: 20; pointer-events: none; white-space: nowrap; transition: color 0.5s, text-shadow 0.5s, transform 2s ease-in-out; will-change: transform; }
+        .prob-cat-container { position: relative; width: 16vh; height: 16vh; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .prob-cat { width: 100%; height: 100%; border-radius: 2.5vh; border: 0.2vh solid var(--purple); object-fit: cover; box-sizing: border-box; z-index: 1; }
+        #turn-counter { position: absolute; font-weight: 900; font-size: 8vh; z-index: 20; pointer-events: none; }
 
         #candidates-box { flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; }
-        .cand-title { font-size:1.2rem; color:#fff; margin-bottom:15px; font-weight:bold; text-align: center; padding: 10px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; }
-        #cand-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 1.4rem; color: #fff; padding-right: 5px; scrollbar-width: none; }
-        #cand-list::-webkit-scrollbar { display: none; }
-        .cand-item { padding: 8px; text-align: center; background: rgba(255,255,255,0.07); border-radius: 10px; transition: transform 2s ease-in-out, filter 0.5s, opacity 0.5s; will-change: transform, filter; }
+        .cand-title { font-size: 1.8vh; color:#fff; margin-bottom: 1.5vh; font-weight:bold; text-align: center; padding: 1vh 0; border-top: 0.1vh solid #333; border-bottom: 0.1vh solid #333; }
+        #cand-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vh; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 2vh; color: #fff; scrollbar-width: none; }
+        .cand-item { padding: 0.8vh; text-align: center; background: rgba(255,255,255,0.07); border-radius: 1vh; }
 
-        .input-view { background: #000; font-size: 3rem; text-align: center; height: 75px; line-height: 75px; border-radius: 12px; margin-bottom: 20px; color: var(--cyan); border: 1px inset #222; letter-spacing: 12px; font-weight: bold; }
-        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        button { background: #222; border: none; color: #fff; padding: 15px 0; border-radius: 10px; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
-        button:active { transform: translate(1px, 1px); }
-        button:disabled { opacity: 0.1; cursor: not-allowed; }
+        .input-view { background: #000; font-size: 4.5vh; text-align: center; height: 9vh; line-height: 9vh; border-radius: 1.2vh; margin-bottom: 2vh; color: var(--cyan); border: 0.1vh inset #222; letter-spacing: 1.5vh; font-weight: bold; }
+        .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vh; }
+        button { background: #222; border: none; color: #fff; padding: 1.8vh 0; border-radius: 1vh; cursor: pointer; font-size: 2vh; box-shadow: 0.2vh 0.2vh 0.5vh rgba(0,0,0,0.5); }
         
-        .btn-clr { background: var(--cyan) !important; color: #000 !important; font-weight: bold; border: 2px solid rgba(255,255,255,0.4); box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 15px var(--cyan); }
-        .btn-obs { background: var(--purple); color: #000; font-weight: bold; border: 2px solid rgba(255,255,255,0.2); box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 15px var(--purple); }
-        .btn-ent { background: var(--green); color: #000; font-weight: bold; grid-row: span 2; border: 2px solid rgba(0,0,0,0.2); box-shadow: inset 0 0 15px rgba(255,255,255,0.3), 0 0 15px var(--green); }
+        .btn-clr { background: var(--cyan) !important; color: #000 !important; font-weight: bold; border: 0.2vh solid rgba(255,255,255,0.4); box-shadow: inset 0 0 1vh rgba(255,255,255,0.5), 0 0 1.5vh var(--cyan); }
+        .btn-obs { background: var(--purple); color: #000; font-weight: bold; border: 0.2vh solid rgba(255,255,255,0.2); box-shadow: inset 0 0 1.5vh rgba(0,0,0,0.5), 0 0 1.5vh var(--purple); }
+        .btn-ent { background: var(--green); color: #000; font-weight: bold; grid-row: span 2; border: 0.2vh solid rgba(0,0,0,0.2); box-shadow: inset 0 0 1.5vh rgba(255,255,255,0.3), 0 0 1.5vh var(--green); }
         
         .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.96); flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #quantum-field { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; pointer-events: none; z-index: 1001; }
-        .bg-candidate { position: absolute; font-family: 'Courier New', monospace; font-size: 1.8rem; font-weight: bold; animation: pulse 3.5s infinite ease-in-out; text-shadow: 0 0 10px currentColor; }
-        @keyframes pulse { 0%, 100% { opacity: 0.1; transform: scale(0.9); } 50% { opacity: 0.5; transform: scale(1.1); } }
+        .bg-candidate { position: absolute; font-family: 'Courier New', monospace; font-size: 2.5vh; font-weight: bold; animation: pulse 3.5s infinite ease-in-out; text-shadow: 0 0 1vh currentColor; }
         
-        /* 관측 페이즈 중앙 패널 배경 강화 */
         .panel-center { 
             position: relative; 
             z-index: 1010; 
@@ -107,12 +105,14 @@
             justify-content: center; 
             text-align: center; 
             background: #0a0a0c; 
-            padding: 50px; 
-            border-radius: 40px; 
-            border: 2px solid var(--purple); 
-            width: min(500px, 90%); 
-            box-shadow: 0 0 100px rgba(0, 0, 0, 1);
+            padding: 5vh; 
+            border-radius: 4vh; 
+            border: 0.2vh solid var(--purple); 
+            width: 60vh; 
+            box-shadow: 0 0 10vh rgba(0, 0, 0, 1);
         }
+
+        #setup-footer { margin-top: 2vh; font-size: 1.2vh; color: #888; text-align: center; z-index: 300; }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false">
@@ -120,7 +120,7 @@
 <div id="sound-control">
     <span class="sound-icon">♪</span>
     <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.15" oninput="adjustVolume(this.value)">
-    <span class="sound-icon" style="font-size:0.8rem;">VOL</span>
+    <span class="sound-icon" style="font-size:1vh;">VOL</span>
 </div>
 
 <div class="title-wrapper">
@@ -136,7 +136,7 @@
     <img src="Aview.png" class="new-keyhole">
 </div>
 
-<div id="setup-footer" style="margin-top: 20px; font-size: 0.75rem; color: #888; text-align: center; line-height: 1.6; z-index: 300;">
+<div id="setup-footer">
     이 게임은 제미나이와 그록을 이용하여 제작되었습니다.<br>
     배경음악은 ErikMMusic의 NCS를 사용했습니다.
 </div>
@@ -178,12 +178,12 @@
 <div id="obs-overlay" class="overlay">
     <div id="quantum-field"></div>
     <div id="obs-input-container" class="panel-center">
-        <h2 style="color:var(--purple); font-size:3rem; margin-bottom:0;">Observation</h2>
-        <p style="color:var(--purple); font-size:1.2rem;">고양이 상자의 숫자를 관측하세요!</p>
+        <h2 style="color:var(--purple); font-size:5vh; margin-bottom:0;">Observation</h2>
+        <p style="color:var(--purple); font-size:2vh;">고양이 상자의 숫자를 관측하세요!</p>
         <input type="tel" id="obs-num" maxlength="4" 
                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-               style="background:#000; color:#fff; font-size:3.5rem; text-align:center; width:250px; margin:30px 0; border:3px solid var(--purple); border-radius:15px; letter-spacing:10px;">
-        <button onclick="submitObs()" style="padding:20px 70px; background:var(--purple); color:#fff; font-weight:bold; font-size:1.5rem; border-radius:15px;">관측 실행</button>
+               style="background:#000; color:#fff; font-size:5vh; text-align:center; width:35vh; margin:4vh 0; border:0.3vh solid var(--purple); border-radius:1.5vh; letter-spacing:1.5vh;">
+        <button onclick="submitObs()" style="padding:2.5vh 8vh; background:var(--purple); color:#fff; font-weight:bold; font-size:2.5vh; border-radius:1.5vh;">관측 실행</button>
     </div>
 </div>
 
@@ -252,12 +252,12 @@
         
         if(aiCandidates.length === 0) {
             chanceTitleEl.style.display = 'none';
-            chanceValEl.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 15px var(--green);">Cat is Poisoned<br>in the Box</span>`; 
+            chanceValEl.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">Cat is Poisoned<br>in the Box</span>`; 
             chanceBoxEl.style.borderColor = 'var(--green)';
             catImg.style.opacity = '0';
-            catImg.style.filter = 'blur(20px)';
+            catImg.style.filter = 'blur(2vh)';
             turnCounter.style.color = 'var(--green)';
-            turnCounter.style.textShadow = '0 0 20px var(--green)';
+            turnCounter.style.textShadow = '0 0 2vh var(--green)';
         } else {
             chanceTitleEl.style.display = 'block';
             chanceTitleEl.innerText = "Measuring Energy Level";
@@ -266,12 +266,12 @@
             chanceValEl.style.color = 'var(--purple)';
             chanceBoxEl.style.borderColor = 'var(--purple)';
             turnCounter.style.color = 'var(--purple)';
-            turnCounter.style.textShadow = '0 0 20px var(--purple)';
-            const blurAmount = Math.max(0, (prob * 0.5));
+            turnCounter.style.textShadow = '0 0 2vh var(--purple)';
+            const blurAmount = Math.max(0, (prob * 0.05));
             const opacityAmount = Math.max(0.1, 1 - (prob / 100));
             catImg.style.display = 'block';
             catImg.style.opacity = opacityAmount;
-            catImg.style.filter = `blur(${blurAmount}px)`;
+            catImg.style.filter = `blur(${blurAmount}vh)`;
             catImg.style.borderColor = 'var(--purple)';
             catImg.style.boxShadow = 'none';
         }
@@ -283,8 +283,8 @@
         document.getElementById('log-window').scrollTop = document.getElementById('log-window').scrollHeight;
 
         const slice = [...aiCandidates].sort(() => 0.5 - Math.random()).slice(0, 50);
-        const pixelateStrength = prob >= 25 ? 0 : (25 - prob) / 3.5; 
-        document.getElementById('cand-list').innerHTML = slice.map(c => `<div class="cand-item" style="filter: blur(${pixelateStrength}px) contrast(180%);">${c}</div>`).join('');
+        const pixelateStrength = prob >= 25 ? 0 : (25 - prob) / 35; 
+        document.getElementById('cand-list').innerHTML = slice.map(c => `<div class="cand-item" style="filter: blur(${pixelateStrength}vh) contrast(180%);">${c}</div>`).join('');
 
         const entBtn = document.getElementById('ent-btn');
         if(turnCount <= 0) {
@@ -319,14 +319,11 @@
             const span = document.createElement('span');
             span.className = 'bg-candidate';
             span.innerText = num;
-
-            // 수정: 중앙 패널 영역(30%~70%)을 피해 배치
             let x, y;
             do {
                 x = Math.random() * 90 + 5;
                 y = Math.random() * 90 + 5;
             } while (x > 30 && x < 70 && y > 25 && y < 75);
-            
             span.style.left = x + "%";
             span.style.top = y + "%";
             span.style.color = neons[Math.floor(Math.random() * neons.length)];
@@ -363,33 +360,31 @@
         const winGif = "cat in the box.gif";
         const paradoxGif = "Neon cat 2.gif";
         const loseImg = "box.gif";
-        
         let mediaUrl = isParadox ? paradoxGif : (isWin ? winGif : loseImg);
-        let mediaHtml = `<img src="${mediaUrl}" class="setup-cat" style="border-color:${color}; box-shadow: 0 0 30px ${color}; width: 375px; height: 375px; object-fit: cover; margin-bottom: 10px;">`;
-
+        
         document.body.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; padding-bottom: 80px; box-sizing: border-box;">
-                ${mediaHtml}
-                <h1 style="font-size:5rem; color:${color}; margin: 5px 0;">${type}</h1>
-                <h2 style="font-size:3rem; color:#fff; margin-bottom: 5px;">${result}</h2>
-                <p style="color:#aaa; font-size:1.5rem; max-width:800px; line-height:1.4; margin: 5px 0;">${msg}</p>
-                <button onclick="location.reload()" style="padding:15px 40px; margin-top:20px; background:#222; color:#fff; border:1px solid ${color}; cursor:pointer; font-size:1.2rem; border-radius:10px;">Restart</button>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; box-sizing: border-box;">
+                <img src="${mediaUrl}" style="border:0.4vh solid ${color}; border-radius:4vh; box-shadow: 0 0 3vh ${color}; width: 45vh; height: 45vh; object-fit: cover; margin-bottom: 2vh;">
+                <h1 style="font-size:7vh; color:${color}; margin: 1vh 0;">${type}</h1>
+                <h2 style="font-size:4vh; color:#fff; margin-bottom: 1vh;">${result}</h2>
+                <p style="color:#aaa; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
+                <button onclick="location.reload()" style="padding:2vh 6vh; margin-top:3vh; background:#222; color:#fff; border:0.2vh solid ${color}; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Restart</button>
             </div>`;
     }
 
     setInterval(() => {
         document.querySelectorAll('.cand-item').forEach(item => {
-            const moveX = (Math.random()-0.5)*12; 
-            const moveY = (Math.random()-0.5)*12;
-            item.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            const moveX = (Math.random()-0.5)*1.2; 
+            const moveY = (Math.random()-0.5)*1.2;
+            item.style.transform = `translate(${moveX}vh, ${moveY}vh)`;
         });
         const turnCounter = document.getElementById('turn-counter');
         if(turnCounter) {
             if (turnCount > 0) {
-                const intensity = turnCount * 18; 
+                const intensity = turnCount * 0.2; 
                 const tMoveX = (Math.random()-0.5) * intensity;
                 const tMoveY = (Math.random()-0.5) * intensity;
-                turnCounter.style.transform = `translate(${tMoveX}px, ${tMoveY}px)`;
+                turnCounter.style.transform = `translate(${tMoveX}vh, ${tMoveY}vh)`;
             } else {
                 turnCounter.style.transform = `translate(0px, 0px)`;
             }
