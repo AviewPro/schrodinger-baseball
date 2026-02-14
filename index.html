@@ -74,7 +74,7 @@
         #chance-box { background: rgba(0,0,0,0.6); padding: 1vh; border-radius: 2vh; border: 0.2vh solid var(--purple); text-align: center; flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; transition: border-color 0.5s; z-index: 5; }
         .chance-title { font-size: 1.56vh; color: var(--purple); font-weight: bold; display: block; margin-bottom: 0.5vh; }
         .chance-value { font-size: 5.85vh; font-weight: 900; color: var(--purple); text-shadow: 0 0 2.5vh var(--purple); font-family: 'Consolas', monospace; line-height: 1.1; }
-        .poison-text { font-size: 2vh; letter-spacing: -0.1vh; line-height: 1.2; } 
+        .poison-text { font-size: 3vh; letter-spacing: -0.15vh; line-height: 1.0; font-weight: 900; } 
 
         .prob-cat-container { position: relative; width: 16vh; height: 16vh; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .prob-cat { width: 100%; height: 100%; border-radius: 2.5vh; border: 0.2vh solid var(--purple); object-fit: cover; box-sizing: border-box; z-index: 1; }
@@ -96,8 +96,10 @@
         
         .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.96); flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         #quantum-field { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; pointer-events: none; z-index: 1001; }
-        .bg-candidate { position: absolute; font-family: 'Courier New', monospace; font-size: 2.5vh; font-weight: bold; animation: pulse 3.5s infinite ease-in-out; text-shadow: 0 0 1vh currentColor; }
+        .bg-candidate { position: absolute; font-family: 'Courier New', monospace; font-size: 6.5vh; font-weight: bold; text-shadow: 0 0 1.5vh currentColor; animation: blinkSync 4s infinite ease-in-out; opacity: 0; }
         
+        @keyframes blinkSync { 0%, 100% { opacity: 0; transform: scale(0.9); } 50% { opacity: 0.7; transform: scale(1.1); } }
+
         .panel-center { 
             position: relative; 
             z-index: 1010; 
@@ -122,7 +124,7 @@
         }
         .tutorial-msg-box {
             background: #1a1a1a; border: 0.3vh solid #666; padding: 2vh 3vh; border-radius: 2vh;
-            width: 60vh; height: auto; min-height: 15vh; text-align: center; box-shadow: 0 0 2vh rgba(0,0,0,0.8); position: relative;
+            width: 60vh; height: auto; min-height: 10vh; text-align: center; box-shadow: 0 0 2vh rgba(0,0,0,0.8); position: relative;
         }
         .tutorial-msg-box h3 { color: #ccc; font-size: 2.5vh; margin-top: 0; margin-bottom: 0; }
         .tutorial-msg-box p { font-size: 1.8vh; color: #ddd; line-height: 1.6; margin: 0.2vh 0 0.75vh 0; }
@@ -226,7 +228,7 @@
     <div class="tutorial-msg-box">
         <h3 id="tut-title">튜토리얼</h3>
         <p id="tut-desc">내용</p>
-        <button id="tut-next-btn" onclick="nextTutorialStep()">확인</button>
+        <button id="tut-next-btn" onclick="handleTutNext()">확인</button>
         <div class="esc-guide">ESC를 누르면 언제든지 메인화면으로 돌아갑니다.</div>
     </div>
 </div>
@@ -253,13 +255,28 @@
         document.getElementById('setup-footer').style.display = 'none'; 
         document.getElementById('game-box').style.display = 'flex';
         document.getElementById('info-panel').style.display = 'flex';
+        resetGameState();
+    }
+
+    function resetGameState() {
         aiCandidates = [];
+        history = [];
+        inputStr = "";
+        turnCount = 7;
         for(let i=0; i<=9999; i++){
             let n = i.toString().padStart(4, '0');
             if(new Set(n).size === 4) aiCandidates.push(n);
         }
         updateUI();
     }
+
+    function restartDirectly() {
+        playClick();
+        document.body.innerHTML = originalBodyContent;
+        startGame();
+    }
+    
+    const originalBodyContent = document.body.innerHTML;
 
     function startTutorial() {
         isTutorial = true;
@@ -268,6 +285,11 @@
         document.getElementById('obs-btn').disabled = true;
         document.getElementById('tutorial-overlay').style.display = 'flex';
         applyTutorialEffect();
+    }
+
+    function handleTutNext() {
+        playClick();
+        nextTutorialStep();
     }
 
     function nextTutorialStep() {
@@ -287,7 +309,6 @@
         const turnCounter = document.getElementById('turn-counter');
         const chanceBox = document.getElementById('chance-box');
         const tutOverlay = document.getElementById('tutorial-overlay');
-        const tutMsgBox = document.querySelector('.tutorial-msg-box');
         
         document.getElementById('game-box').classList.add('tutorial-dim');
         document.getElementById('info-panel').classList.add('tutorial-dim');
@@ -457,7 +478,7 @@
             document.getElementById('status').innerText = "측정 소진 (관측만 가능)";
         } else {
             entBtn.disabled = false;
-            document.getElementById('status').innerText = "양자고양이 좌표 측정 중...";
+            document.getElementById('status').innerText = "고양이 위치 관측 중...";
         }
     }
 
@@ -472,12 +493,13 @@
             span.innerText = num;
             let x, y;
             do {
-                x = Math.random() * 90 + 5;
-                y = Math.random() * 90 + 5;
-            } while (x > 30 && x < 70 && y > 25 && y < 75);
+                x = Math.random() * 85 + 5;
+                y = Math.random() * 85 + 5;
+            } while (x > 25 && x < 75 && y > 20 && y < 80);
             span.style.left = x + "%";
             span.style.top = y + "%";
             span.style.color = neons[Math.floor(Math.random() * neons.length)];
+            span.style.animationDelay = (Math.random() * 4) + "s";
             field.appendChild(span);
         });
     }
@@ -514,13 +536,19 @@
         const loseImg = "box.gif";
         let mediaUrl = isParadox ? paradoxGif : (isWin ? winGif : loseImg);
         
+        let restartBtnHtml = isParadox ? "" : `<button onclick="restartDirectly()" style="width:40vh; padding:2vh 0; margin-top:3vh; background:#222; color:#fff; border:0.2vh solid ${color}; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Restart</button>`;
+        let menuBtnWidth = isParadox ? "40vh" : "20vh";
+
         document.body.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; box-sizing: border-box;">
                 <img src="${mediaUrl}" style="border:0.4vh solid ${color}; border-radius:4vh; box-shadow: 0 0 3vh ${color}; width: 45vh; height: 45vh; object-fit: cover; margin-bottom: 2vh;">
                 <h1 style="font-size:7vh; color:${color}; margin: 1vh 0;">${type}</h1>
                 <h2 style="font-size:4vh; color:#fff; margin-bottom: 1vh;">${result}</h2>
                 <p style="color:#aaa; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
-                <button onclick="location.reload()" style="padding:2vh 6vh; margin-top:3vh; background:#222; color:#fff; border:0.2vh solid ${color}; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Restart</button>
+                <div style="display:flex; gap: 2vh; align-items: center;">
+                    <button onclick="location.reload()" style="width:${menuBtnWidth}; padding:2vh 0; margin-top:3vh; background:#222; color:#fff; border:0.2vh solid #444; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Main Menu</button>
+                    ${restartBtnHtml}
+                </div>
             </div>`;
     }
 
