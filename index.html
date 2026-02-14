@@ -96,7 +96,23 @@
         #quantum-field { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; pointer-events: none; z-index: 1001; }
         .bg-candidate { position: absolute; font-family: 'Courier New', monospace; font-size: 1.8rem; font-weight: bold; animation: pulse 3.5s infinite ease-in-out; text-shadow: 0 0 10px currentColor; }
         @keyframes pulse { 0%, 100% { opacity: 0.1; transform: scale(0.9); } 50% { opacity: 0.5; transform: scale(1.1); } }
-        .panel-center { position: relative; z-index: 1010; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #0a0a0c; padding: 50px; border-radius: 40px; border: 2px solid var(--purple); width: min(500px, 90%); }
+        
+        /* 관측 페이즈 중앙 패널 배경 강화 */
+        .panel-center { 
+            position: relative; 
+            z-index: 1010; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            background: #0a0a0c; 
+            padding: 50px; 
+            border-radius: 40px; 
+            border: 2px solid var(--purple); 
+            width: min(500px, 90%); 
+            box-shadow: 0 0 100px rgba(0, 0, 0, 1);
+        }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false">
@@ -117,7 +133,7 @@
         <img src="Neon cat.gif" class="setup-cat">
     </div>
     <button onclick="startGame()" class="setup-btn">Start Single Mode (vs AI)</button>
-    <img src="https://cdn.discordapp.com/attachments/1471931935969247347/1472129705875472577/AMW1TPpNbcPHxslY-uRw7LHeiTlAEiLQ0X9myE579tYra-0e4VOjeq98RLnB9BTbP-xQqIReDNcvcRepnzsXdrZzMJThuX0IFchW2B4u6I3_0EsyV77Blbp0w6xb9V-w0SEuaJjAKiTTVwVjyDrthp8E44zWqDw-XH34ZMVvXgAcFOtXtQz-_AqFMqd-I8mNJ20zuXZXk4nks1PJfJbWOzxZf-520qv9ecJ1o3o8yZkuMAqcg3cqsDJYi49LzOII4qKSOo_cMAa6jLSvzauNWeick5XDzLH7K4r11Q.png?ex=69917320&is=699021a0&hm=aa79788f9cff46c38c4e39077e62c46cc16a81a4e9bb599fe1d6cfbe16917f22&" class="new-keyhole">
+    <img src="Aview.png" class="new-keyhole">
 </div>
 
 <div id="setup-footer" style="margin-top: 20px; font-size: 0.75rem; color: #888; text-align: center; line-height: 1.6; z-index: 300;">
@@ -164,18 +180,19 @@
     <div id="obs-input-container" class="panel-center">
         <h2 style="color:var(--purple); font-size:3rem; margin-bottom:0;">Observation</h2>
         <p style="color:var(--purple); font-size:1.2rem;">고양이 상자의 숫자를 관측하세요!</p>
-        <input type="text" id="obs-num" maxlength="4" style="background:#000; color:#fff; font-size:3.5rem; text-align:center; width:250px; margin:30px 0; border:3px solid var(--purple); border-radius:15px; letter-spacing:10px;">
+        <input type="tel" id="obs-num" maxlength="4" 
+               oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+               style="background:#000; color:#fff; font-size:3.5rem; text-align:center; width:250px; margin:30px 0; border:3px solid var(--purple); border-radius:15px; letter-spacing:10px;">
         <button onclick="submitObs()" style="padding:20px 70px; background:var(--purple); color:#fff; font-weight:bold; font-size:1.5rem; border-radius:15px;">관측 실행</button>
     </div>
 </div>
 
 <script>
     let aiCandidates = [], history = [], inputStr = "", turnCount = 7;
-    // 오디오 파일들도 같은 폴더에 있을 경우 파일명만 사용
     const bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
     bgm.playbackRate = 2.0;
-    const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"); // 이건 시스템 효과음이므로 유지
+    const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
     const meowSfx = new Audio("moeeza3-kitten-cat-meow-437244.mp3");
 
     function adjustVolume(val) { 
@@ -302,8 +319,16 @@
             const span = document.createElement('span');
             span.className = 'bg-candidate';
             span.innerText = num;
-            span.style.left = (Math.random() * 90 + 5) + "%";
-            span.style.top = (Math.random() * 90 + 5) + "%";
+
+            // 수정: 중앙 패널 영역(30%~70%)을 피해 배치
+            let x, y;
+            do {
+                x = Math.random() * 90 + 5;
+                y = Math.random() * 90 + 5;
+            } while (x > 30 && x < 70 && y > 25 && y < 75);
+            
+            span.style.left = x + "%";
+            span.style.top = y + "%";
             span.style.color = neons[Math.floor(Math.random() * neons.length)];
             field.appendChild(span);
         });
