@@ -171,11 +171,9 @@
             transition: none;
             pointer-events: none;
         }
-        /* 로고 크기 3배 (15vh -> 45vh) */
         .credit-logo { width: 45vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
 
-        /* 비네팅 효과 완화 조정 */
         #flash-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
         }
@@ -237,7 +235,7 @@
             <button id="obs-btn" class="btn-obs" onclick="clickObs()">OBS</button>
             <button class="key-btn" onclick="press('4')">4</button><button class="key-btn" onclick="press('5')">5</button><button class="key-btn" onclick="press('6')">6</button>
             <button id="clr-btn" class="btn-clr" onclick="clickSpecial('CLR')">CLR</button>
-            <button class="key-btn" onclick="press('1')">1</button><button class="key-btn" onclick="press('2')">2</button><button class="key-btn" onclick="press('3')">3</button>
+            <button class="key-btn" onclick="press('1')">1</button><button class="key-btn" onclick="press('2') bridge" onclick="press('2')">2</button><button class="key-btn" onclick="press('3')">3</button>
             <button id="ent-btn" class="btn-ent" onclick="clickSpecial('ENT')">ENT</button>
             <button id="zero-btn" style="grid-column: span 3" onclick="press('0')">0</button>
         </div>
@@ -284,7 +282,7 @@
     bgm.loop = true;
     bgm.playbackRate = 2.0;
     const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-    const specialClickSfx = new Audio("클릭(2).mp3");
+    const specialClickSfx = new Audio("Click.mp3");
     const meowSfx = new Audio("moeeza3-kitten-cat-meow-437244.mp3");
     const emergencySfx = new Audio("비상알람.mp3");
     const failSfx = new Audio("띠용.mp3");
@@ -311,8 +309,8 @@
         currentVolume = parseFloat(val);
         bgm.volume = currentVolume; 
         meowSfx.volume = currentVolume; 
-        // 100% 알람 소리 30% 상향 (기존 0.8 -> 1.1)
-        emergencySfx.volume = Math.min(1.0, currentVolume * 1.1); 
+        // 100% 경보음 50% 상향 조정
+        emergencySfx.volume = Math.min(1.0, currentVolume * 1.5); 
         failSfx.volume = Math.min(1.0, currentVolume * 1.5); 
         successSfx.volume = currentVolume;
         specialClickSfx.volume = currentVolume;
@@ -325,7 +323,6 @@
         const sc = specialClickSfx.cloneNode(); 
         sc.volume = currentVolume;
         sc.play().catch(e=>{}); 
-        bgm.play().catch(e=>{}); 
     }
 
     function clickSpecial(type) {
@@ -676,7 +673,6 @@
                 <button onclick="window.showCredits()" style="width:65vh; padding:4vh 0; margin-top:5vh; background:#222; color:var(--green); border:0.4vh solid var(--green); cursor:pointer; font-size:4vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh var(--green);">Credits</button>`;
         } else {
             const tipType = isWin ? 'success' : 'fail';
-            // TIPS 버튼 상단 이동 및 크기 확대 수정
             subButtons = `
                 <div style="display:flex; flex-direction:column; gap: 1.5vh; align-items: center; margin-top:3vh; width: 62vh;">
                     <button onclick="window.showTips('${tipType}')" style="width:100%; padding:2.5vh 0; background:#333; color:${color}; border:0.2vh solid ${color}; cursor:pointer; font-size:2.8vh; border-radius:1.5vh; font-weight:bold;">TIPS</button>
