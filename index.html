@@ -8,7 +8,7 @@
         
         body { 
             background: linear-gradient(rgba(5, 5, 7, 0.8), rgba(5, 5, 7, 0.8)), 
-                        url('https://github.com/AviewPro/schrodinger-baseball/blob/main/cat%20footage.gif?raw=true');
+                        url('cat footage.gif');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -114,7 +114,7 @@
 
 <div id="setup">
     <div class="setup-box-container">
-        <img src="https://github.com/AviewPro/schrodinger-baseball/blob/main/Neon%20cat.gif?raw=true" class="setup-cat">
+        <img src="Neon cat.gif" class="setup-cat">
     </div>
     <button onclick="startGame()" class="setup-btn">Start Single Mode (vs AI)</button>
     <img src="https://cdn.discordapp.com/attachments/1471931935969247347/1472129705875472577/AMW1TPpNbcPHxslY-uRw7LHeiTlAEiLQ0X9myE579tYra-0e4VOjeq98RLnB9BTbP-xQqIReDNcvcRepnzsXdrZzMJThuX0IFchW2B4u6I3_0EsyV77Blbp0w6xb9V-w0SEuaJjAKiTTVwVjyDrthp8E44zWqDw-XH34ZMVvXgAcFOtXtQz-_AqFMqd-I8mNJ20zuXZXk4nks1PJfJbWOzxZf-520qv9ecJ1o3o8yZkuMAqcg3cqsDJYi49LzOII4qKSOo_cMAa6jLSvzauNWeick5XDzLH7K4r11Q.png?ex=69917320&is=699021a0&hm=aa79788f9cff46c38c4e39077e62c46cc16a81a4e9bb599fe1d6cfbe16917f22&" class="new-keyhole">
@@ -149,7 +149,7 @@
             </div>
             <div class="prob-cat-container">
                 <div id="turn-counter">7</div>
-                <img id="prob-cat-img" src="https://github.com/AviewPro/schrodinger-baseball/blob/main/Neon%20cat.gif?raw=true" class="prob-cat">
+                <img id="prob-cat-img" src="Neon cat.gif" class="prob-cat">
             </div>
         </div>
         <div id="candidates-box">
@@ -171,11 +171,12 @@
 
 <script>
     let aiCandidates = [], history = [], inputStr = "", turnCount = 7;
-    const bgm = new Audio("https://github.com/AviewPro/schrodinger-baseball/raw/refs/heads/main/002.%20ErikMMusic%20-%20The%20Dusty%20Attic.mp3");
+    // 오디오 파일들도 같은 폴더에 있을 경우 파일명만 사용
+    const bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
     bgm.playbackRate = 2.0;
-    const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-    const meowSfx = new Audio("https://github.com/AviewPro/schrodinger-baseball/raw/refs/heads/main/moeeza3-kitten-cat-meow-437244.mp3");
+    const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"); // 이건 시스템 효과음이므로 유지
+    const meowSfx = new Audio("moeeza3-kitten-cat-meow-437244.mp3");
 
     function adjustVolume(val) { 
         bgm.volume = val; 
@@ -334,9 +335,9 @@
     }
 
     function renderEndGame(type, result, msg, color, isWin, isParadox) {
-        const winGif = "https://github.com/AviewPro/schrodinger-baseball/blob/main/cat%20in%20the%20box.gif?raw=true";
-        const paradoxGif = "https://github.com/AviewPro/schrodinger-baseball/blob/main/Neon%20cat%202.gif?raw=true";
-        const loseImg = "https://github.com/AviewPro/schrodinger-baseball/blob/main/box.gif?raw=true";
+        const winGif = "cat in the box.gif";
+        const paradoxGif = "Neon cat 2.gif";
+        const loseImg = "box.gif";
         
         let mediaUrl = isParadox ? paradoxGif : (isWin ? winGif : loseImg);
         let mediaHtml = `<img src="${mediaUrl}" class="setup-cat" style="border-color:${color}; box-shadow: 0 0 30px ${color}; width: 375px; height: 375px; object-fit: cover; margin-bottom: 10px;">`;
