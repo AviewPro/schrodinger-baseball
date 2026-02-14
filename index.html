@@ -29,7 +29,7 @@
             -webkit-user-select: none;
         }
         
-        #sound-control { position: fixed; right: 2vh; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 1vh; background: rgba(0,0,0,0.7); padding: 1.5vh 1vh; border-radius: 3vh; border: 0.1vh solid var(--cyan); z-index: 3000; }
+        #sound-control { position: fixed; right: 2vh; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 1vh; background: rgba(0,0,0,0.7); padding: 1.5vh 1vh; border-radius: 3vh; border: 0.1vh solid var(--cyan); z-index: 10000; }
         #sound-control input[type=range] { -webkit-appearance: slider-vertical; width: 0.8vh; height: 15vh; cursor: pointer; }
         .sound-icon { font-size: 1.5vh; color: var(--cyan); }
 
@@ -60,15 +60,15 @@
 
         #game-box, #info-panel { width: 50vh; height: 75vh; padding: 2.5vh; border-radius: 2.5vh; box-sizing: border-box; display: flex; flex-direction: column; }
         #game-box { background: rgba(17, 17, 17, 0.9); border: 0.1vh solid #333; position: relative; display: none; }
-        #info-panel { background: rgba(10, 10, 15, 0.9); border: 0.1vh solid #333; display: none; }
+        #info-panel { background: rgba(10, 10, 15, 0.9); border: 0.1vh solid #333; display: none; position: relative; }
         
         .status { text-align:center; color:var(--cyan); margin-bottom:1.5vh; font-weight:bold; height:3vh; font-size: 2.2vh; }
         #log-window { flex-grow: 1; background: #000; overflow-y: auto; padding: 1vh; font-family: 'Consolas', monospace; margin-bottom: 1.5vh; border: 0.1vh inset #222; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 8.5vh; gap: 0px; align-content: start; }
         .log-item { padding: 0.5vh; display: flex; flex-direction: column; justify-content: center; background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-bottom: 0.1vh solid #222; position: relative; box-sizing: border-box; text-align: center; }
         .log-item:nth-child(odd) { border-right: 0.1vh solid #333; }
-        .log-n { font-size: 3vh; font-weight: bold; display: block; letter-spacing: 0.2vh; }
+        .log-n { font-size: 3vh; font-weight: bold; display: block; letter-spacing: 0.2vh; color: #fff; }
         .log-sb { font-weight: bold; font-size: 1.8vh; color: var(--purple); margin-top: 0.2vh; }
-        .log-out { color: var(--red); text-shadow: 0 0 1vh var(--red); }
+        .log-out { color: #bc13fe; text-shadow: 0 0 1vh #bc13fe; }
 
         .chance-area { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5vh; gap: 2vh; height: 16vh; position: relative; }
         #chance-box { background: rgba(0,0,0,0.6); padding: 1vh; border-radius: 2vh; border: 0.2vh solid var(--purple); text-align: center; flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; transition: border-color 0.5s; z-index: 5; }
@@ -80,12 +80,12 @@
         .prob-cat { width: 100%; height: 100%; border-radius: 2.5vh; border: 0.2vh solid var(--purple); object-fit: cover; box-sizing: border-box; z-index: 1; }
         #turn-counter { position: absolute; font-weight: 900; font-size: 8vh; z-index: 20; pointer-events: none; transition: transform 2s ease-in-out, color 0.5s; will-change: transform; }
 
-        #candidates-box { flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; }
+        #candidates-box { flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
         .cand-title { font-size: 1.8vh; color:#fff; margin-bottom: 1.5vh; font-weight:bold; text-align: center; padding: 1vh 0; border-top: 0.1vh solid #333; border-bottom: 0.1vh solid #333; }
         #cand-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vh; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 2vh; color: #fff; scrollbar-width: none; }
         .cand-item { padding: 0.8vh; text-align: center; background: rgba(255,255,255,0.07); border-radius: 1vh; transition: none; will-change: transform; }
 
-        .input-view { background: #000; font-size: 4.5vh; text-align: center; height: 9vh; line-height: 9vh; border-radius: 1.2vh; margin-bottom: 2vh; color: var(--cyan); border: 0.1vh inset #222; letter-spacing: 1.5vh; font-weight: bold; }
+        .input-view { background: #000; font-size: 4.5vh; text-align: center; height: 9vh; line-height: 9vh; border-radius: 1.2vh; margin-bottom: 2vh; color: #fff; border: 0.1vh inset #222; letter-spacing: 1.5vh; font-weight: bold; }
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vh; }
         button { background: #222; border: none; color: #fff; padding: 1.8vh 0; border-radius: 1vh; cursor: pointer; font-size: 2.4vh; box-shadow: 0.2vh 0.2vh 0.5vh rgba(0,0,0,0.5); }
         button:disabled { opacity: 0.1; cursor: not-allowed; }
@@ -150,10 +150,9 @@
         }
         .tutorial-dim { opacity: 0.2 !important; pointer-events: none !important; }
 
-        /* 크레딧 스타일 */
         #credit-overlay { 
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: rgba(0,0,0,0.98); z-index: 9000; flex-direction: column; align-items: center; overflow: hidden;
+            background: rgba(0,0,0,0.98); z-index: 15000; flex-direction: column; align-items: center; overflow: hidden;
         }
         #credit-container {
             position: relative;
@@ -164,16 +163,26 @@
             display: flex;
             justify-content: center;
             overflow: hidden;
+            pointer-events: auto;
         }
         #credit-content {
             position: absolute; top: 100%; width: 90%; text-align: center; color: #ddd;
             font-size: 2.1vh; line-height: 2.2; white-space: pre-wrap; padding: 10vh 0;
-            transition: transform linear;
+            transition: none;
+            pointer-events: none;
         }
+        .credit-logo { width: 15vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
+
+        #flash-overlay { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
+        }
+        #dead-x { display: none; position: absolute; top: 62%; left: 50%; transform: translate(-50%, -50%); font-size: 30vh; color: var(--red); font-weight: 900; opacity: 0.6; z-index: 100; pointer-events: none; }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false">
+
+<div id="flash-overlay"></div>
 
 <div id="sound-control">
     <span class="sound-icon">♪</span>
@@ -181,8 +190,8 @@
     <span class="sound-icon" style="font-size:1vh;">VOL</span>
 </div>
 
-<div id="credit-overlay" onclick="closeCredits()">
-    <div id="credit-container">
+<div id="credit-overlay">
+    <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
         <div id="credit-content"></div>
     </div>
     <div class="credit-esc">Press ESC to Close</div>
@@ -225,14 +234,15 @@
             <button class="key-btn" onclick="press('7')">7</button><button class="key-btn" onclick="press('8')">8</button><button class="key-btn" onclick="press('9')">9</button>
             <button id="obs-btn" class="btn-obs" onclick="clickObs()">OBS</button>
             <button class="key-btn" onclick="press('4')">4</button><button class="key-btn" onclick="press('5')">5</button><button class="key-btn" onclick="press('6')">6</button>
-            <button id="clr-btn" class="btn-clr" onclick="clearIn()">CLR</button>
+            <button id="clr-btn" class="btn-clr" onclick="clickSpecial('CLR')">CLR</button>
             <button class="key-btn" onclick="press('1')">1</button><button class="key-btn" onclick="press('2')">2</button><button class="key-btn" onclick="press('3')">3</button>
-            <button id="ent-btn" class="btn-ent" onclick="clickEnter()">ENT</button>
+            <button id="ent-btn" class="btn-ent" onclick="clickSpecial('ENT')">ENT</button>
             <button id="zero-btn" style="grid-column: span 3" onclick="press('0')">0</button>
         </div>
     </div>
 
     <div id="info-panel">
+        <div id="dead-x">X</div>
         <div class="chance-area" id="chance-area">
             <div id="chance-box">
                 <span id="chance-title" class="chance-title">Measuring Energy Level</span>
@@ -265,13 +275,14 @@
 <script>
     let aiCandidates = [], history = [], inputStr = "", turnCount = 7;
     let isTutorial = false, tutorialStep = 0, currentTipType = "";
-    let paradoxMusicTriggered = false;
-    let alarmTriggered = false;
+    let paradoxMusicTriggered = false, alarmTriggered = false, zeroOverlayTriggered = false;
+    let currentVolume = 0.15;
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
     bgm.playbackRate = 2.0;
     const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+    const specialClickSfx = new Audio("클릭(2).mp3");
     const meowSfx = new Audio("moeeza3-kitten-cat-meow-437244.mp3");
     const emergencySfx = new Audio("비상알람.mp3");
     const failSfx = new Audio("띠용.mp3");
@@ -281,12 +292,12 @@
 
     const tipsData = {
         fail: [
-            { title: "실패 시 참고팁 (1/3)", desc: "혹시 자신이 계속실패하고 있다면 처음에 1234, 5678을 입력하고 나머지는 아무렇게나 입력해도 보통 관측확률이 체감상 30%정도 되는 것 같았습니다." },
+            { title: "실패 시 참고팁 (1/3)", desc: "계속 실패하고 있다면 처음에 1234, 5678을 입력하고 나머지는 아무렇게나 입력해도 마지막 관측확률이 체감상 30%정도 되는 것 같았습니다." },
             { title: "실패 시 참고팁 (2/3)", desc: "그리고 고양이의 알고리즘 상 초반에는 계속 Ball 판정을 주기 때문에 \n의심되는 숫자들을 최대한 모든 자리수에 돌려가며 배치하다보면 \n5~6회 사이에는 금새 가능성이 좁혀지게 됩니다." },
             { title: "실패 시 참고팁 (3/3)", desc: "어느정도 숫자가 특정되면 양자구름에 표시돼있는 숫자들을 보고 \n측정시도만 해도 어렵지 않게 양자고양이를 관측할 수 있을겁니다. 화이팅!" }
         ],
         success: [
-            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이게임은 관측에 성공을 하든 실패를 하든\nQuatum Collapse 라는 엔딩이 나오죠. 그렇게 한 것은 두가지 모두 이 게임을 만들 때 \n제가 목표했던 바는 아니기 때문입니다." },
+            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든\nQuatum Collapse 라는 엔딩이 나오죠. \n그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
             { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n이 게임은 정확히 6번만에 100%로 양자고양이의 위치를 특정하고 \n7번째 측정까지 진행해서 양자고양이를 잡는 게임입니다." },
             { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 위치로 도망쳐서 판정을 줍니다. \n정확히는 볼카운트를 가능한 후보숫자가 가장 많은 쪽으로 내준다는 의미죠." },
             { title: "성공 시 참고팁 (4/5)", desc: "그렇다고 해도 고정된 알고리즘이기 때문에 똑같은 질문을 100번하면 100번 똑같이 답하게 되어있죠. 스스로 빌드를 만들어서 가장 높은 확률만 보고 달려가면 점점 최적화 될 수 밖에 없는 구조입니다." },
@@ -295,10 +306,25 @@
     };
 
     function adjustVolume(val) { 
-        bgm.volume = val; meowSfx.volume = val; 
-        emergencySfx.volume = val; failSfx.volume = val; successSfx.volume = val;
+        currentVolume = parseFloat(val);
+        bgm.volume = currentVolume; 
+        meowSfx.volume = currentVolume; 
+        emergencySfx.volume = currentVolume * 0.8; 
+        failSfx.volume = Math.min(1.0, currentVolume * 1.5); 
+        successSfx.volume = currentVolume;
+        specialClickSfx.volume = currentVolume;
     }
+    
+    adjustVolume(0.15);
+
     function playClick() { const sc = clickSfx.cloneNode(); sc.play().catch(e=>{}); bgm.play().catch(e=>{}); }
+    function playSpecialClick() { const sc = specialClickSfx.cloneNode(); sc.play().catch(e=>{}); bgm.play().catch(e=>{}); }
+
+    function clickSpecial(type) {
+        playSpecialClick();
+        if(type === 'CLR') clearIn(true);
+        if(type === 'ENT') clickEnter(true);
+    }
 
     function startGame() {
         playClick();
@@ -311,7 +337,7 @@
 
     function resetGameState() {
         aiCandidates = []; history = []; inputStr = ""; turnCount = 7; 
-        paradoxMusicTriggered = false; alarmTriggered = false;
+        paradoxMusicTriggered = false; alarmTriggered = false; zeroOverlayTriggered = false;
         for(let i=0; i<=9999; i++){
             let n = i.toString().padStart(4, '0');
             if(new Set(n).size === 4) aiCandidates.push(n);
@@ -326,6 +352,7 @@
         bgm.loop = true;
         bgm.playbackRate = 2.0;
         document.body.innerHTML = originalBodyContent;
+        adjustVolume(document.getElementById('volume-slider')?.value || 0.15);
         startGame();
     }
 
@@ -447,8 +474,8 @@
             if (e.key === 'Enter') submitObs(); return;
         }
         if (e.key >= '0' && e.key <= '9') press(e.key);
-        if (e.key === 'Enter') clickEnter();
-        if (e.key === 'Delete' || e.key === 'Backspace') clearIn();
+        if (e.key === 'Enter') clickSpecial('ENT');
+        if (e.key === 'Delete' || e.key === 'Backspace') clickSpecial('CLR');
     });
 
     function press(n) { 
@@ -462,14 +489,14 @@
         } 
     }
 
-    function clearIn() { playClick(); inputStr = ""; document.getElementById('display').innerText = "----"; }
+    function clearIn(isSpecial) { if(!isSpecial) playClick(); inputStr = ""; document.getElementById('display').innerText = "----"; }
     
-    function clickEnter() {
+    function clickEnter(isSpecial) {
         if(inputStr.length === 4 && turnCount > 0) {
-            playClick();
+            if(!isSpecial) playClick();
             const res = aiRespond(inputStr);
             history.push({ n: inputStr, s: res.s, b: res.b });
-            turnCount--; clearIn(); updateUI();
+            turnCount--; clearIn(true); updateUI();
             if (isTutorial && tutorialStep === 2) {
                 setTimeout(() => { tutorialStep = 3; document.getElementById('tutorial-overlay').style.display = 'flex'; applyTutorialEffect(); }, 500);
             }
@@ -508,6 +535,8 @@
         const chanceTitleEl = document.getElementById('chance-title');
         const chanceBoxEl = document.getElementById('chance-box');
         const catImg = document.getElementById('prob-cat-img');
+        const deadX = document.getElementById('dead-x');
+        const flashOverlay = document.getElementById('flash-overlay');
         
         if(aiCandidates.length === 0) {
             if(!paradoxMusicTriggered) {
@@ -517,30 +546,45 @@
                 bgm.play().catch(e => {});
                 paradoxMusicTriggered = true;
             }
+            if(!zeroOverlayTriggered) {
+                flashOverlay.style.background = 'radial-gradient(circle, rgba(0, 255, 65, 0) 85%, rgba(0, 255, 65, 0.4) 100%)';
+                flashOverlay.style.opacity = '1';
+                setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
+                zeroOverlayTriggered = true;
+            }
             chanceTitleEl.style.display = 'none';
             chanceValEl.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">Cat is Poisoned<br>in the Box</span>`; 
             chanceBoxEl.style.borderColor = 'var(--green)';
             catImg.style.opacity = '0'; catImg.style.filter = 'blur(2vh)';
             turnCounter.style.color = 'var(--green)'; turnCounter.style.textShadow = '0 0 2vh var(--green)';
+            deadX.style.display = 'block'; 
         } else {
-            // 확률 100% 시 비상 알람 재생
-            if (prob === 100 && !alarmTriggered) {
-                emergencySfx.play().catch(e=>{});
-                alarmTriggered = true;
-            } else if (prob < 100) {
+            deadX.style.display = 'none';
+            if (prob === 100) {
+                chanceValEl.style.color = 'var(--red)';
+                chanceValEl.style.textShadow = '0 0 2.5vh var(--red)';
+                if(!alarmTriggered) {
+                    emergencySfx.play().catch(e=>{});
+                    flashOverlay.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0) 85%, rgba(255, 0, 0, 0.4) 100%)';
+                    flashOverlay.style.opacity = '1';
+                    setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
+                    alarmTriggered = true;
+                }
+            } else {
+                chanceValEl.style.color = 'var(--purple)';
+                chanceValEl.style.textShadow = '0 0 2.5vh var(--purple)';
                 alarmTriggered = false;
             }
 
             chanceTitleEl.style.display = 'block';
             chanceTitleEl.innerText = "Measuring Energy Level";
             chanceValEl.innerText = prob.toFixed(2) + "%";
-            chanceTitleEl.style.color = 'var(--purple)'; chanceValEl.style.color = 'var(--purple)';
-            chanceBoxEl.style.borderColor = 'var(--purple)';
-            turnCounter.style.color = 'var(--purple)'; turnCounter.style.textShadow = '0 0 2vh var(--purple)';
+            chanceBoxEl.style.borderColor = prob === 100 ? 'var(--red)' : 'var(--purple)';
+            turnCounter.style.color = prob === 100 ? 'var(--red)' : 'var(--purple)';
             const blurAmount = Math.max(0, (prob * 0.05));
             const opacityAmount = Math.max(0.1, 1 - (prob / 100));
             catImg.style.display = 'block'; catImg.style.opacity = opacityAmount;
-            catImg.style.filter = `blur(${blurAmount}vh)`; catImg.style.borderColor = 'var(--purple)';
+            catImg.style.filter = `blur(${blurAmount}vh)`; catImg.style.borderColor = prob === 100 ? 'var(--red)' : 'var(--purple)';
         }
         
         document.getElementById('log-window').innerHTML = history.map(h => {
@@ -557,11 +601,11 @@
         const entBtn = document.getElementById('ent-btn');
         if(turnCount <= 0) {
             entBtn.disabled = true;
-            statusEl.innerText = "측정 소진 (관측만 가능)";
+            statusEl.innerText = "측정 완료 (관측만 가능)";
             statusEl.style.color = "var(--red)";
         } else {
             entBtn.disabled = false;
-            statusEl.innerText = "고양이 좌표 측정 중...";
+            statusEl.innerText = "양자고양이 좌표 측정 중";
             statusEl.style.color = "var(--cyan)";
         }
     }
@@ -586,7 +630,7 @@
 
     function clickObs() {
         if(isTutorial) return;
-        playClick();
+        playSpecialClick();
         if(aiCandidates.length === 0) {
             meowSfx.play().catch(e=>{}); 
             renderEndGame("Quantum Paradox", "불가능한 세계선", `미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
@@ -635,11 +679,16 @@
         }
 
         document.body.innerHTML = `
-            <div id="credit-overlay" onclick="closeCredits()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9000; flex-direction:column; align-items:center; overflow:hidden;">
-                <div id="credit-container" style="position:relative; width:50%; height:100%; border-left:0.2vh solid rgba(255,255,255,0.3); border-right:0.2vh solid rgba(255,255,255,0.3); display:flex; justify-content:center; overflow:hidden;">
-                    <div id="credit-content" style="position:absolute; top:100%; width:90%; text-align:center; color:#ddd; font-size:2.1vh; line-height:2.2; white-space:pre-wrap; padding:10vh 0; transition:transform linear;"></div>
+            <div id="sound-control" style="z-index:20000;">
+                <span class="sound-icon">♪</span>
+                <input type="range" id="volume-slider-end" min="0" max="1" step="0.01" value="${currentVolume}" oninput="adjustVolume(this.value)">
+                <span class="sound-icon" style="font-size:1vh;">VOL</span>
+            </div>
+            <div id="credit-overlay">
+                <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
+                    <div id="credit-content"></div>
                 </div>
-                <div class="credit-esc" style="position:fixed; bottom:3vh; right:3vh; color:#666; font-size:1.5vh;">Press ESC to Close</div>
+                <div class="credit-esc">Press ESC to Close</div>
             </div>
             <div id="tutorial-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:5000; flex-direction:column; align-items:center; justify-content:center;">
                 <div class="tutorial-msg-box">
@@ -656,7 +705,15 @@
                 <p style="color:#aaa; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
                 ${subButtons}
             </div>`;
+            
+        document.getElementById('volume-slider-end').addEventListener('input', (e) => {
+            adjustVolume(e.target.value);
+        });
     }
+
+    let creditScrollInterval = null;
+    let creditY = 0;
+    let creditSpeed = 1;
 
     window.showCredits = function() {
         const overlay = document.getElementById('credit-overlay');
@@ -668,45 +725,63 @@
 드디어 해볼 수 있어서 만드는 내내 정말 즐거웠습니다.
 
 
-이 게임의 원래 아이디어는 가짜 숫자야구 야구게임의 변형룰에서 시작됐습니다. 처음엔 사람간에 치열한 두뇌 게임을 생각했죠. 수비자가 대놓고 거짓말을 할 수 있고, 공격자는 '이거는 말이 안 된다!' 싶을 때 '모순'을 선언해서 끝내는 방식이었거든요. 반대로 수비자는 모순이 아니라는 걸 '반증'하면 이기는 거고요.
+이 게임의 원래 아이디어는 가짜 숫자야구게임의 변형룰에서 시작됐습니다. 처음엔 사람간에 치열한 두뇌 게임을 생각했죠. 수비자가 제한없이 거짓말을 할 수 있고, 공격자는 '이거는 말이 안 된다!' 싶을 때 '모순'을 선언해서 끝내는 방식이었거든요. 반대로 수비자는 모순이 아니라는 걸 '반증'하면 이기는 거고요.
 
 
-근데 막상 혼자 시뮬레이션을 돌려보니까 생각보다 어렵더라고요. 단 4턴 만에 논리적으로 앞뒤가 안 맞는 상황이 오기도 하고, 완벽하게 거짓말을 섞어가며 카운트를 준다는 게 생각보다 엄청난 사고력을 필요로 한다는 걸 깨달았습니다. 그래서 '제미나이'랑 "완벽하게 거짓말하는 상대를 이기려면 몇 번이나 걸릴까?" 같은 얘기를 나누다가 지금의 아이디어가 튀어나왔습니다.
+근데 막상 혼자 시뮬레이션을 돌려보니까 생각보다 어렵더라고요. 단 4턴 만에 논리적으로 앞뒤가 안 맞는 상황이 오기도 하고, 완벽하게 거짓말을 섞어가며 카운트를 준다는 게 생각보다 엄청난 사고력을 필요로 한다는 걸 깨달았습니다. 그래서 제미나이랑 "완벽하게 거짓말하는 상대를 이기려면 몇 번이나 걸릴까?" 라는 질문에서 지금의 게임이 구상되었습니다.
 
 
 이름도 처음엔 '패러독스 베이스볼' 같은 걸 생각했는데, "슈뢰딩거 베이스볼"이 꽂히더라고요. 
-모든 숫자의 가능성이 중첩되어 있다가, 관측하면 할수록 가능성이 줄어들고 결국 하나의 숫자로 정해지는 컨셉! 제가 원하던 느낌이랑 딱 맞아떨어져서 파바박하고 만들어봤습니다.
+모든 숫자의 가능성이 중첩되어 있다가, 관측하면 할수록 가능성이 줄어들고 
+결국 하나의 숫자로 정해지는 컨셉! 제가 원하던 느낌이랑 딱 맞아떨어져서 파바박하고 만들어봤습니다.
 
 
 사실 전 프로그래밍 지식이 제로에 가까워서 AI를 쓴다고 해도 이렇게 빠르게 될 줄은 몰랐습니다. 
-구상에 반나절, 코드 짜는 데 하루 정도 걸렸는데, 막히는 걸 바로바로 물어보면서 코드를 만들어갈 수 있어서 빨랐던 것 같습니다.
+구상에 반나절, 코드 짜는 데 하루 정도 걸렸는데, 막히는 걸 바로바로 물어보면서 
+코드를 만들어갈 수 있어서 빨랐던 것 같습니다.
 
 
 마음 같아서는 '개쳐귀여운 고양이' 이미지랑 컨셉을 막 쏟아붓고 싶었는데... 이게 생각보다 어렵더라고요. 
 이미지를 찾아도 게임에 넣으니깐 제가 원하는 느낌이 안 살아서 결국 지금같은 모습이 됐습니다. 
 
 
-세상이 참 빠르게 변하는 것 같습니다. 앞으로도 재밌는 아이디어가 떠오르면 게임을 만들어 보겠습니다. 귀여운 고양이나 실컷 구경하다 가세요! 
+세상이 참 빠르게 변하는 것 같습니다. 앞으로도 재밌는 아이디어가 떠오르면 게임을 만들어 보겠습니다. 
+어쩌면 슈뢰딩거 베이스볼 PVP버젼도 만들 수 있을 것 같습니다.
+게임은 끝입니다. 귀여운 고양이나 실컷 구경하다 가세요! 
 
 -AVIEW-`;
         
-        content.innerText = text;
+        content.innerHTML = `<div>${text}</div><img src="Aview.png" class="credit-logo">`;
         overlay.style.display = 'flex';
-        content.style.transition = `none`;
-        content.style.transform = `translateY(0)`;
         
-        setTimeout(() => {
-            const duration = 180;
-            content.style.transition = `transform ${duration}s linear`;
-            content.style.transform = `translateY(-${content.scrollHeight + window.innerHeight}px)`;
-        }, 100);
+        creditY = window.innerHeight;
+        creditSpeed = 1;
+        
+        if (creditScrollInterval) clearInterval(creditScrollInterval);
+        creditScrollInterval = setInterval(() => {
+            creditY -= creditSpeed;
+            content.style.transform = `translateY(${creditY}px)`;
+            if (creditY < -content.scrollHeight) {
+                clearInterval(creditScrollInterval);
+            }
+        }, 16);
+    };
+
+    window.accelerateCredits = function(e) {
+        if(e) e.stopPropagation(); 
+        creditSpeed = 5;
+    };
+
+    window.normalizeCredits = function(e) {
+        if(e) e.stopPropagation();
+        creditSpeed = 1;
     };
 
     window.closeCredits = function() {
         const overlay = document.getElementById('credit-overlay');
         if(overlay) {
             overlay.style.display = 'none';
-            document.getElementById('credit-content').style.transition = 'none';
+            if (creditScrollInterval) clearInterval(creditScrollInterval);
         }
     };
 
