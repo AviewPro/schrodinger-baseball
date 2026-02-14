@@ -171,9 +171,11 @@
             transition: none;
             pointer-events: none;
         }
-        .credit-logo { width: 15vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
+        /* 로고 크기 3배 (15vh -> 45vh) */
+        .credit-logo { width: 45vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
 
+        /* 비네팅 효과 완화 조정 */
         #flash-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
         }
@@ -299,7 +301,7 @@
         success: [
             { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든\nQuatum Collapse 라는 엔딩이 나오죠. \n그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
             { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n이 게임은 정확히 6번만에 100%로 양자고양이의 위치를 특정하고 \n7번째 측정까지 진행해서 양자고양이를 잡는 게임입니다." },
-            { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 위치로 도망쳐서 판정을 줍니다. \n정확히는 볼카운트를 가능한 후보숫자가 가장 많은 쪽으로 내준다는 의미죠." },
+            { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 위치로 도망칩니다. \n정확히는 볼카운트를 가능한 후보숫자가 가장 많은 쪽으로 내준다는 의미죠." },
             { title: "성공 시 참고팁 (4/5)", desc: "그렇다고 해도 고정된 알고리즘이기 때문에 똑같은 질문을 100번하면 100번 똑같이 답하게 되어있죠. 스스로 빌드를 만들어서 가장 높은 확률만 보고 달려가면 점점 최적화 될 수 밖에 없는 구조입니다." },
             { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 패러독스 엔딩을 보겠다는 건가요? \n그렇다면 환영입니다." }
         ]
@@ -309,7 +311,8 @@
         currentVolume = parseFloat(val);
         bgm.volume = currentVolume; 
         meowSfx.volume = currentVolume; 
-        emergencySfx.volume = currentVolume * 0.8; 
+        // 100% 알람 소리 30% 상향 (기존 0.8 -> 1.1)
+        emergencySfx.volume = Math.min(1.0, currentVolume * 1.1); 
         failSfx.volume = Math.min(1.0, currentVolume * 1.5); 
         successSfx.volume = currentVolume;
         specialClickSfx.volume = currentVolume;
@@ -318,7 +321,12 @@
     adjustVolume(0.15);
 
     function playClick() { const sc = clickSfx.cloneNode(); sc.play().catch(e=>{}); bgm.play().catch(e=>{}); }
-    function playSpecialClick() { const sc = specialClickSfx.cloneNode(); sc.play().catch(e=>{}); bgm.play().catch(e=>{}); }
+    function playSpecialClick() { 
+        const sc = specialClickSfx.cloneNode(); 
+        sc.volume = currentVolume;
+        sc.play().catch(e=>{}); 
+        bgm.play().catch(e=>{}); 
+    }
 
     function clickSpecial(type) {
         playSpecialClick();
@@ -668,13 +676,14 @@
                 <button onclick="window.showCredits()" style="width:65vh; padding:4vh 0; margin-top:5vh; background:#222; color:var(--green); border:0.4vh solid var(--green); cursor:pointer; font-size:4vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh var(--green);">Credits</button>`;
         } else {
             const tipType = isWin ? 'success' : 'fail';
+            // TIPS 버튼 상단 이동 및 크기 확대 수정
             subButtons = `
-                <div style="display:flex; flex-direction:column; gap: 1.5vh; align-items: center; margin-top:3vh;">
-                    <div style="display:flex; gap: 2vh;">
-                        <button onclick="location.reload()" style="width:20vh; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid #444; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Main Menu</button>
-                        <button onclick="restartDirectly()" style="width:40vh; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid ${color}; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Restart</button>
+                <div style="display:flex; flex-direction:column; gap: 1.5vh; align-items: center; margin-top:3vh; width: 62vh;">
+                    <button onclick="window.showTips('${tipType}')" style="width:100%; padding:2.5vh 0; background:#333; color:${color}; border:0.2vh solid ${color}; cursor:pointer; font-size:2.8vh; border-radius:1.5vh; font-weight:bold;">TIPS</button>
+                    <div style="display:flex; gap: 2vh; width: 100%;">
+                        <button onclick="location.reload()" style="flex:1; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid #444; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Main Menu</button>
+                        <button onclick="restartDirectly()" style="flex:2; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid ${color}; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Restart</button>
                     </div>
-                    <button onclick="window.showTips('${tipType}')" style="width:62vh; padding:1.5vh 0; background:#333; color:${color}; border:0.2vh solid ${color}; cursor:pointer; font-size:2vh; border-radius:1.5vh; font-weight:bold;">TIPS</button>
                 </div>`;
         }
 
