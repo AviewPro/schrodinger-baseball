@@ -48,7 +48,7 @@
 
         .title-wrapper { position: relative; margin-bottom: 3vh; z-index: 300; display: flex; justify-content: center; align-items: center; }
         .title-bg { position: absolute; background: rgba(0, 0, 0, 0.7); width: 120%; height: 120%; border-radius: 1.5vh; filter: blur(0.5vh); z-index: -1; }
-        .header-title { font-size: 5vh; font-weight: bold; letter-spacing: 1.2vh; text-shadow: 0 0 2vh currentColor; animation: neonShift 10s infinite alternate linear; text-align: center; margin: 0; padding: 1vh 4vh; }
+        .header-title { font-size: 5vh; font-weight: bold; letter-spacing: 1.2vh; text-shadow: 0 0 2 vh currentColor; animation: neonShift 10s infinite alternate linear; text-align: center; margin: 0; padding: 1vh 4vh; }
         
         @keyframes neonShift { 0% { color: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 2vh var(--cyan); } 100% { color: var(--purple); border-color: var(--purple); box-shadow: 0 0 2vh var(--purple); } }
         @keyframes neonShiftBg { 0% { background-color: var(--cyan); box-shadow: 0 0 1.5vh var(--cyan); } 100% { background-color: var(--purple); box-shadow: 0 0 1.5vh var(--purple); } }
@@ -188,13 +188,24 @@
             background: rgba(0,0,0,0.95); z-index: 15000; flex-direction: row; align-items: center; justify-content: center; overflow: hidden;
         }
         .side-cat-box {
-            flex: 1; display: flex; align-items: center; justify-content: center; padding: 2vh; height: 100%; z-index: 15001;
+            flex: 1; display: flex; align-items: center; justify-content: center; padding: 2vh; height: 100%; z-index: 16000; pointer-events: none;
         }
-        .side-cat-img { width: 17.5vh; height: 17.5vh; border-radius: 2vh; border: 0.2vh solid #444; object-fit: cover; opacity: 0.7; }
+        .side-cat-img { 
+            width: 35vh; height: 35vh; border-radius: 4vh; border: 0.6vh solid #fff; object-fit: cover; 
+            opacity: 1; box-shadow: 0 1vh 3vh rgba(0,0,0,0.8), 0 0 2vh rgba(255,255,255,0.3);
+            transform: translateZ(50px);
+            animation: floatingCat 4s infinite ease-in-out;
+        }
+        
+        /* 고양이 둥실둥실 애니메이션 */
+        @keyframes floatingCat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-3vh) rotate(2deg); }
+        }
         
         #credit-container {
             position: relative;
-            width: 80vh; 
+            width: 50%; 
             height: 100%;
             border-left: 0.2vh solid rgba(255,255,255,0.3);
             border-right: 0.2vh solid rgba(255,255,255,0.3);
@@ -245,7 +256,7 @@
     <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
         <div id="credit-content"></div>
     </div>
-    <div class="side-cat-box"><img src="귀여운고양이도트3.jpg" class="side-cat-img"></div>
+    <div class="side-cat-box"><img src="귀여운고양이도트3.jpg" class="side-cat-img" style="animation-delay: -2s;"></div>
     <div class="credit-esc">Press ESC to Close</div>
 </div>
 
@@ -332,6 +343,7 @@
     let failLoopInterval = null; 
     let successLoopInterval = null; 
     let meowLoopInterval = null; 
+    let meowCount = 0; 
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
@@ -354,8 +366,8 @@
             { title: "실패 시 참고팁 (3/3)", desc: "어느정도 숫자가 특정되면 양자구름에 표시돼있는 숫자들을 보면서 \n측정시도만 해도 2살 아가 먼치킨이 아닌 이상 \n양자고양이를 관측할 수 있을겁니다. 화이팅!" }
         ],
         success: [
-            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든 \nQuatum Collapse 엔딩이 나오죠. 그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
-            { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n<span style='color:var(--red);'>이 게임은 정확히 6회까지 100%로 양자고양이의 좌표를 특정하고 \n7회차 측정까지 진행해서 양자고양이를 잡는 게임입니다.</span>" },
+            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든 \nQuatum Collapse 엔딩이 나오죠.\n그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
+            { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n<b style='color:var(--red);'>이 게임은 정확히 6회까지 100%로 양자고양이의 좌표를 특정하고 \n7회차 측정까지 진행해서 양자고양이를 잡는 게임입니다.</b>" },
             { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 좌표로 도망칩니다. \n정확히는 가능한 후보숫자가 가장 많은 볼카운트 대답한다는 의미죠." },
             { title: "성공 시 참고팁 (4/5)", desc: "고정된 알고리즘이기 때문에 똑같은 질문을 100번 하면 100번 똑같이 답합니다. \n일정한 빌드를 만들어서 가장 높은 확률을 따라가면 최적화되는 구조입니다. \n숫자를 교차로 배치해서 계속해서 숨을곳을 좁히세요." },
             { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 굳이 패러독스 엔딩을 보겠다는 건가요? 그런분은 정말 환영입니다." }
@@ -425,7 +437,7 @@
     }
 
     function resetGameState() {
-        aiCandidates = []; history = []; inputStr = ""; turnCount = 7; 
+        aiCandidates = []; history = []; inputStr = ""; turnCount = 7; meowCount = 0;
         paradoxMusicTriggered = false; alarmTriggered = false; zeroOverlayTriggered = false;
         if(poisonInterval) { clearInterval(poisonInterval); poisonInterval = null; }
         for(let i=0; i<=9999; i++){
@@ -741,7 +753,7 @@
             statusEl.style.color = "var(--red)";
         } else {
             entBtn.disabled = false;
-            statusEl.innerText = "고양이 위치 관측 중...";
+            statusEl.innerText = "양자고양이 좌표 측정 중...";
             statusEl.style.color = "var(--cyan)";
         }
     }
@@ -768,11 +780,18 @@
         if(isTutorial) return;
         playSpecialClick();
         if(aiCandidates.length === 0) {
+            meowCount = 0; 
             meowSfx.play().catch(e=>{}); 
+            meowCount++;
             if(meowLoopInterval) clearInterval(meowLoopInterval);
             meowLoopInterval = setInterval(() => {
-                meowSfx.currentTime = 0;
-                meowSfx.play().catch(e=>{});
+                if(meowCount < 20) {
+                    meowSfx.currentTime = 0;
+                    meowSfx.play().catch(e=>{});
+                    meowCount++;
+                } else {
+                    clearInterval(meowLoopInterval);
+                }
             }, 6000);
 
             renderEndGame("Quantum Paradox", "불가능한 세계선", `축하합니다! 당신은 미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
@@ -855,7 +874,7 @@
                 <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
                     <div id="credit-content"></div>
                 </div>
-                <div class="side-cat-box"><img src="귀여운고양이도트3.jpg" class="side-cat-img"></div>
+                <div class="side-cat-box"><img src="귀여운고양이도트3.jpg" class="side-cat-img" style="animation-delay: -2s;"></div>
                 <div class="credit-esc">Press ESC to Close</div>
             </div>
             <div id="tutorial-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:5000; flex-direction:column; align-items:center; justify-content:center;">
@@ -958,7 +977,7 @@
         const turnCounter = document.getElementById('turn-counter');
         if(turnCounter) {
             if (turnCount > 0) {
-                const intensity = (turnCount) * 15; // 내 턴 카운터 움직임 계수 15 반영
+                const intensity = (turnCount) * 1.5; 
                 const tMoveX = (Math.random()-0.5) * intensity;
                 const tMoveY = (Math.random()-0.5) * intensity;
                 turnCounter.style.transform = `translate(${tMoveX}vh, ${tMoveY}vh)`;
