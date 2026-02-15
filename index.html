@@ -29,6 +29,18 @@
             user-select: none;
             -webkit-user-select: none;
         }
+
+        /* 버전 표기 스타일 */
+        #version-tag {
+            position: fixed;
+            bottom: 1.5vh;
+            left: 2vh;
+            color: #555;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2vh;
+            letter-spacing: 0.1vh;
+            z-index: 500;
+        }
         
         #sound-control { position: fixed; right: 2vh; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 1vh; background: rgba(0,0,0,0.7); padding: 1.5vh 1vh; border-radius: 3vh; border: 0.1vh solid var(--cyan); z-index: 10000; }
         #sound-control input[type=range] { -webkit-appearance: slider-vertical; width: 0.8vh; height: 15vh; cursor: pointer; }
@@ -192,21 +204,21 @@
             transition: none;
             pointer-events: none;
         }
-        .credit-logo { width: 67.5vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
+        .credit-logo { width: 33.75vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
         
         .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 15001; }
         
-        /* 양쪽 이미지 개별 그라데이션 수정 */
+        /* 양쪽 GIF 이미지에만 개별 그라데이션 적용 (전체화면 효과 지움) */
         .credit-deco-left { 
             left: 5vw; 
-            -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%) !important; 
-            mask-image: linear-gradient(to left, black 40%, transparent 100%) !important; 
+            -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%); 
+            mask-image: linear-gradient(to left, black 40%, transparent 100%); 
         }
         .credit-deco-right { 
             right: 5vw; 
-            -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%) !important; 
-            mask-image: linear-gradient(to right, black 40%, transparent 100%) !important; 
+            -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%); 
+            mask-image: linear-gradient(to right, black 40%, transparent 100%); 
         }
 
         #flash-overlay { 
@@ -217,13 +229,13 @@
         .emoji-lane {
             position: fixed; white-space: nowrap; font-size: 5vh; pointer-events: none; z-index: 5; opacity: 0.6;
         }
-        /* 애니메이션 시간 5초 추가 단축 (총 16초 단축) */
         @keyframes slide-h { from { transform: translateX(-150%); } to { transform: translateX(150vw); } }
         @keyframes slide-v { from { transform: translateY(150vh); } to { transform: translateY(-150%); } }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false">
 
+<div id="version-tag">1.0 version</div>
 <div id="flash-overlay"></div>
 
 <div id="sound-control">
@@ -355,7 +367,12 @@
 
     function adjustVolume(val) { 
         currentVolume = parseFloat(val);
-        bgm.volume = currentVolume; 
+        // 패러독스 BGM(SoundHelix-Song-8.mp3)인 경우 볼륨 30%로 제한
+        if (bgm.src.includes("SoundHelix-Song-8.mp3")) {
+            bgm.volume = currentVolume * 0.3;
+        } else {
+            bgm.volume = currentVolume; 
+        }
         meowSfx.volume = currentVolume; 
         emergencySfx.volume = Math.min(1.0, currentVolume * 4.0); 
         failSfx.volume = Math.min(1.0, currentVolume * 3.0); 
@@ -656,11 +673,11 @@
                 bgm.pause();
                 bgm = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
                 bgm.loop = true;
+                bgm.volume = currentVolume * 0.3; // 볼륨 30%로 조정
                 bgm.play().catch(e => {});
                 paradoxMusicTriggered = true;
             }
             if(!zeroOverlayTriggered) {
-                // 비네팅 범위 확장 (85% -> 70%)
                 flashOverlay.style.background = 'radial-gradient(circle, rgba(0, 255, 65, 0) 70%, rgba(0, 255, 65, 0.4) 100%)';
                 flashOverlay.style.opacity = '1';
                 setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
@@ -681,7 +698,6 @@
                 chanceValEl.style.textShadow = '0 0 2.5vh var(--red)';
                 if(!alarmTriggered) {
                     emergencySfx.play().catch(e=>{});
-                    // 비네팅 범위 확장 (85% -> 70%)
                     flashOverlay.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0) 70%, rgba(255, 0, 0, 0.4) 100%)';
                     flashOverlay.style.opacity = '1';
                     setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
@@ -799,7 +815,6 @@
         let emojiLanes = "";
         if(isParadox) {
             const longLane = "🐈 ".repeat(22);
-            // 주기를 5초 더 단축(24초, 29초 등) 및 딜레이 불규칙화
             emojiLanes = `
                 <div class="emoji-lane" style="top:15vh; animation: slide-h 24s linear infinite; animation-delay: -3s;">${longLane}</div>
                 <div class="emoji-lane" style="bottom:15vh; animation: slide-h 29s linear infinite reverse; animation-delay: -7s;">${longLane}</div>
@@ -824,6 +839,7 @@
         }
 
         document.body.innerHTML = `
+            <div id="version-tag">1.0 version</div>
             ${emojiLanes}
             <div id="sound-control" style="z-index:20000;">
                 <span class="sound-icon">♪</span>
@@ -893,7 +909,7 @@
 
 -AVIEW-`;
         
-        // 귀여운고양이.jpg 크기 조정 (하단 로고와 동일하게 67.5vh)
+        // Aview.png 크기 50% 축소 반영
         content.innerHTML = `<div>${text}</div><img src="귀여운고양이.jpg" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh;"><img src="Aview.png" class="credit-logo">`;
         overlay.style.display = 'flex';
         creditY = window.innerHeight;
