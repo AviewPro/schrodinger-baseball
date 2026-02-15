@@ -194,19 +194,22 @@
         }
         .credit-logo { width: 67.5vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
+        
+        /* 크레딧 데코레이션 이미지 */
+        .credit-deco { position: fixed; bottom: 5vh; width: 15vh; height: 15vh; object-fit: contain; pointer-events: none; z-index: 15001; }
+        .credit-deco-left { left: 5vw; }
+        .credit-deco-right { right: 5vw; }
 
         #flash-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
         }
         #dead-x { display: none; position: absolute; top: 62%; left: 50%; transform: translate(-50%, -50%); font-size: 30vh; color: var(--green); text-shadow: 0 0 4vh var(--green), 0 0 8vh var(--green); font-weight: 900; opacity: 0.8; z-index: 100; pointer-events: none; }
 
-        /* 패러독스 배경 이모지 애니메이션 수정 (40초 주기, 긴 행렬) */
         .emoji-lane {
             position: fixed; white-space: nowrap; font-size: 5vh; pointer-events: none; z-index: 5; opacity: 0.6;
         }
         @keyframes slide-h { from { transform: translateX(-150%); } to { transform: translateX(150vw); } }
         @keyframes slide-v { from { transform: translateY(150vh); } to { transform: translateY(-150%); } }
-        @keyframes slide-d { from { transform: translate(-150%, 150vh); } to { transform: translate(150vw, -150%); } }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false">
@@ -220,6 +223,8 @@
 </div>
 
 <div id="credit-overlay">
+    <img src="도트고양이.gif" class="credit-deco credit-deco-left">
+    <img src="도트고양이3.gif" class="credit-deco credit-deco-right">
     <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
         <div id="credit-content"></div>
     </div>
@@ -350,7 +355,8 @@
 
     function playClick() { 
         const sc = clickSfx.cloneNode(); 
-        sc.volume = currentVolume; 
+        // ENT, CLR, OBS 제외 버튼 클릭 소리 3배
+        sc.volume = Math.min(1.0, currentVolume * 3.0); 
         sc.play().catch(e=>{}); 
         if(bgm.paused) bgm.play().catch(e=>{}); 
     }
@@ -361,7 +367,6 @@
         sc.play().catch(e=>{ console.log("Special Click Sound Error:", e); }); 
     }
 
-    // 키보드 입력 시 버튼 시각 효과 함수
     function simulateButtonPress(btnId) {
         const btn = document.getElementById(btnId);
         if (btn) {
@@ -539,7 +544,6 @@
         }
         
         if (e.key >= '0' && e.key <= '9') {
-            // 키보드 입력 시 해당 숫자 버튼 시각 효과
             const btn = document.querySelector(e.key === '0' ? '#zero-btn' : `.key-btn[data-key="${e.key}"]`);
             if(btn) { btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 100); }
             press(e.key);
@@ -765,15 +769,12 @@
         
         let emojiLanes = "";
         if(isParadox) {
-            // 긴 행렬(22마리) 및 40초 주기 설정
             const longLane = "🐈 ".repeat(22);
             emojiLanes = `
                 <div class="emoji-lane" style="top:15vh; animation: slide-h 40s linear infinite;">${longLane}</div>
                 <div class="emoji-lane" style="bottom:15vh; animation: slide-h 45s linear infinite reverse;">${longLane}</div>
                 <div class="emoji-lane" style="left:10vw; animation: slide-v 38s linear infinite;">${longLane.split(' ').join('<br>')}</div>
                 <div class="emoji-lane" style="right:10vw; animation: slide-v 42s linear infinite reverse;">${longLane.split(' ').join('<br>')}</div>
-                <div class="emoji-lane" style="top:0; left:0; animation: slide-d 50s linear infinite;">${longLane}</div>
-                <div class="emoji-lane" style="top:0; right:0; transform: scaleX(-1); animation: slide-d 55s linear infinite;">${longLane}</div>
             `;
         }
 
@@ -800,6 +801,8 @@
                 <span class="sound-icon" style="font-size:1vh;">VOL</span>
             </div>
             <div id="credit-overlay">
+                <img src="도트고양이.gif" class="credit-deco credit-deco-left">
+                <img src="도트고양이3.gif" class="credit-deco credit-deco-right">
                 <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
                     <div id="credit-content"></div>
                 </div>
