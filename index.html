@@ -327,7 +327,7 @@
     <div id="quantum-field"></div>
     <div id="obs-input-container" class="panel-center">
         <h2 style="color:var(--purple); font-size:5vh; margin-bottom:0;">Observation</h2>
-        <p style="color:var(--purple); font-size:2vh;">양자고양이의 좌표를 관측하세요!</p>
+        <p style="color:var(--purple); font-size:2vh;"><b>양자고양이의 좌표를 관측하세요!</b></p>
         <input type="tel" id="obs-num" maxlength="4" autocomplete="off"
                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                style="background:#000; color:#fff; font-family: 'Orbitron', sans-serif; font-size: 5vh; text-align:center; width:35vh; margin:4vh 0; border:0.3vh solid var(--purple); border-radius:1.5vh; letter-spacing:1.5vh; text-shadow: 0 0 1vh var(--purple);">
@@ -354,6 +354,7 @@
     const emergencySfx = new Audio("비상알람.mp3");
     const failSfx = new Audio("띠용.mp3");
     const successSfx = new Audio("고양이 코골이_[cut_5sec].mp3");
+    const nyaBgmSfx = new Audio("냥이 브금.mp3");
 
     const originalBodyContent = document.body.innerHTML;
 
@@ -386,6 +387,7 @@
         failSfx.volume = Math.min(1.0, currentVolume * 3.0); 
         successSfx.volume = currentVolume;
         specialClickSfx.volume = Math.min(1.0, currentVolume * 3.0);
+        nyaBgmSfx.volume = currentVolume;
     }
     
     adjustVolume(0.15);
@@ -401,6 +403,11 @@
         const sc = specialClickSfx.cloneNode(); 
         sc.volume = Math.min(1.0, currentVolume * 3.0);
         sc.play().catch(e=>{}); 
+    }
+
+    function playNyaBgm() {
+        nyaBgmSfx.currentTime = 0;
+        nyaBgmSfx.play().catch(e=>{});
     }
 
     function simulateButtonPress(btnId) {
@@ -942,7 +949,7 @@
         
         content.innerHTML = `
             <div>${text}</div>
-            <img src="귀여운고양이.jpg" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh;">
+            <img src="귀여운고양이.jpg" onclick="playNyaBgm()" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh; border:0.4vh solid var(--green); box-shadow: 0 0 2vh var(--green); cursor:pointer;">
             <img src="Aview.png" class="credit-logo">
         `;
         overlay.style.display = 'flex';
