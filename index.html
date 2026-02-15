@@ -196,16 +196,17 @@
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
         
         .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 15001; }
-        /* 양쪽 이미지 개별 그라데이션 적용 */
+        
+        /* 양쪽 이미지 개별 그라데이션 수정 */
         .credit-deco-left { 
             left: 5vw; 
-            -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%); 
-            mask-image: linear-gradient(to left, black 50%, transparent 100%); 
+            -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%) !important; 
+            mask-image: linear-gradient(to left, black 40%, transparent 100%) !important; 
         }
         .credit-deco-right { 
             right: 5vw; 
-            -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%); 
-            mask-image: linear-gradient(to right, black 50%, transparent 100%); 
+            -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%) !important; 
+            mask-image: linear-gradient(to right, black 40%, transparent 100%) !important; 
         }
 
         #flash-overlay { 
@@ -216,7 +217,7 @@
         .emoji-lane {
             position: fixed; white-space: nowrap; font-size: 5vh; pointer-events: none; z-index: 5; opacity: 0.6;
         }
-        /* 애니메이션 시간 11초 단축 */
+        /* 애니메이션 시간 5초 추가 단축 (총 16초 단축) */
         @keyframes slide-h { from { transform: translateX(-150%); } to { transform: translateX(150vw); } }
         @keyframes slide-v { from { transform: translateY(150vh); } to { transform: translateY(-150%); } }
     </style>
@@ -321,7 +322,7 @@
     let paradoxMusicTriggered = false, alarmTriggered = false, zeroOverlayTriggered = false;
     let currentVolume = 0.15;
     let failLoopInterval = null; 
-    let successLoopInterval = null; // 승리 사운드 루프용
+    let successLoopInterval = null; 
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
@@ -474,7 +475,7 @@
         if (title && desc) {
             const tip = tipsData[currentTipType][tutorialStep];
             title.innerText = tip.title;
-            desc.innerHTML = tip.desc; // 붉은 글씨 적용을 위해 innerHTML로 변경
+            desc.innerHTML = tip.desc; 
         }
     }
 
@@ -659,7 +660,8 @@
                 paradoxMusicTriggered = true;
             }
             if(!zeroOverlayTriggered) {
-                flashOverlay.style.background = 'radial-gradient(circle, rgba(0, 255, 65, 0) 85%, rgba(0, 255, 65, 0.4) 100%)';
+                // 비네팅 범위 확장 (85% -> 70%)
+                flashOverlay.style.background = 'radial-gradient(circle, rgba(0, 255, 65, 0) 70%, rgba(0, 255, 65, 0.4) 100%)';
                 flashOverlay.style.opacity = '1';
                 setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
                 zeroOverlayTriggered = true;
@@ -679,7 +681,8 @@
                 chanceValEl.style.textShadow = '0 0 2.5vh var(--red)';
                 if(!alarmTriggered) {
                     emergencySfx.play().catch(e=>{});
-                    flashOverlay.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0) 85%, rgba(255, 0, 0, 0.4) 100%)';
+                    // 비네팅 범위 확장 (85% -> 70%)
+                    flashOverlay.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0) 70%, rgba(255, 0, 0, 0.4) 100%)';
                     flashOverlay.style.opacity = '1';
                     setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
                     alarmTriggered = true;
@@ -767,7 +770,6 @@
             let realSecret = aiCandidates[Math.floor(Math.random() * aiCandidates.length)];
             if(guess === realSecret) {
                 successSfx.play().catch(e=>{});
-                // 6초마다 코골이 사운드 실행
                 if(successLoopInterval) clearInterval(successLoopInterval);
                 successLoopInterval = setInterval(() => {
                     successSfx.currentTime = 0;
@@ -797,12 +799,12 @@
         let emojiLanes = "";
         if(isParadox) {
             const longLane = "🐈 ".repeat(22);
-            // 반복 시간 11초씩 단축
+            // 주기를 5초 더 단축(24초, 29초 등) 및 딜레이 불규칙화
             emojiLanes = `
-                <div class="emoji-lane" style="top:15vh; animation: slide-h 29s linear infinite;">${longLane}</div>
-                <div class="emoji-lane" style="bottom:15vh; animation: slide-h 34s linear infinite reverse;">${longLane}</div>
-                <div class="emoji-lane" style="left:10vw; animation: slide-v 27s linear infinite;">${longLane.split(' ').join('<br>')}</div>
-                <div class="emoji-lane" style="right:10vw; animation: slide-v 31s linear infinite reverse;">${longLane.split(' ').join('<br>')}</div>
+                <div class="emoji-lane" style="top:15vh; animation: slide-h 24s linear infinite; animation-delay: -3s;">${longLane}</div>
+                <div class="emoji-lane" style="bottom:15vh; animation: slide-h 29s linear infinite reverse; animation-delay: -7s;">${longLane}</div>
+                <div class="emoji-lane" style="left:10vw; animation: slide-v 22s linear infinite; animation-delay: -12s;">${longLane.split(' ').join('<br>')}</div>
+                <div class="emoji-lane" style="right:10vw; animation: slide-v 26s linear infinite reverse; animation-delay: -1s;">${longLane.split(' ').join('<br>')}</div>
             `;
         }
 
@@ -891,8 +893,8 @@
 
 -AVIEW-`;
         
-        // 귀여운고양이.jpg 이미지 추가 및 구조 유지
-        content.innerHTML = `<div>${text}</div><img src="귀여운고양이.jpg" style="width:40vh; height:auto; margin-top:5vh; border-radius:2vh;"><img src="Aview.png" class="credit-logo">`;
+        // 귀여운고양이.jpg 크기 조정 (하단 로고와 동일하게 67.5vh)
+        content.innerHTML = `<div>${text}</div><img src="귀여운고양이.jpg" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh;"><img src="Aview.png" class="credit-logo">`;
         overlay.style.display = 'flex';
         creditY = window.innerHeight;
         creditSpeed = 1;
