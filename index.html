@@ -185,11 +185,16 @@
 
         #credit-overlay { 
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: rgba(0,0,0,0.95); z-index: 15000; flex-direction: column; align-items: center; overflow: hidden;
+            background: rgba(0,0,0,0.95); z-index: 15000; flex-direction: row; align-items: center; justify-content: center; overflow: hidden;
         }
+        .side-cat-box {
+            flex: 1; display: flex; align-items: center; justify-content: center; padding: 2vh; height: 100%; z-index: 15001;
+        }
+        .side-cat-img { width: 35vh; height: 35vh; border-radius: 2vh; border: 0.2vh solid #444; object-fit: cover; opacity: 0.7; }
+        
         #credit-container {
             position: relative;
-            width: 50%; 
+            width: 80vh; 
             height: 100%;
             border-left: 0.2vh solid rgba(255,255,255,0.3);
             border-right: 0.2vh solid rgba(255,255,255,0.3);
@@ -236,9 +241,11 @@
 </div>
 
 <div id="credit-overlay">
+    <div class="side-cat-box"><img src="귀여운고양이2.jpg" class="side-cat-img"></div>
     <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
         <div id="credit-content"></div>
     </div>
+    <div class="side-cat-box"><img src="귀여운고양이3.jpg" class="side-cat-img"></div>
     <div class="credit-esc">Press ESC to Close</div>
 </div>
 
@@ -768,7 +775,7 @@
                 meowSfx.play().catch(e=>{});
             }, 6000);
 
-            renderEndGame("Quantum Paradox", "불가능한 세계선", `미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
+            renderEndGame("Quantum Paradox", "불가능한 세계선", `축하합니다! 당신은 미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
             return;
         }
         renderProbabilityCloud();
@@ -844,9 +851,11 @@
                 <span class="sound-icon" style="font-size:1vh;">VOL</span>
             </div>
             <div id="credit-overlay">
+                <div class="side-cat-box"><img src="귀여운고양이2.jpg" class="side-cat-img"></div>
                 <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
                     <div id="credit-content"></div>
                 </div>
+                <div class="side-cat-box"><img src="귀여운고양이3.jpg" class="side-cat-img"></div>
                 <div class="credit-esc">Press ESC to Close</div>
             </div>
             <div id="tutorial-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:5000; flex-direction:column; align-items:center; justify-content:center;">
@@ -861,7 +870,7 @@
                 <img src="${mediaUrl}" style="border:0.4vh solid ${color}; border-radius:4vh; box-shadow: 0 0 3vh ${color}; width: 45vh; height: 45vh; object-fit: cover; margin-bottom: 2vh;">
                 <h1 style="font-size:7vh; color:${color}; margin: 1vh 0; text-shadow:0 0 2vh ${color};">${type}</h1>
                 <h2 style="font-size:4vh; color:#fff; margin-bottom: 1vh;">${result}</h2>
-                <p style="color:#aaa; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
+                <p style="color:${isParadox ? color : '#aaa'}; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
                 ${subButtons}
             </div>`;
             
@@ -949,7 +958,7 @@
         const turnCounter = document.getElementById('turn-counter');
         if(turnCounter) {
             if (turnCount > 0) {
-                const intensity = (turnCount) * 15; // 내 턴 카운터 움직임 계수 15 반영
+                const intensity = (turnCount) * 1.5; 
                 const tMoveX = (Math.random()-0.5) * intensity;
                 const tMoveY = (Math.random()-0.5) * intensity;
                 turnCounter.style.transform = `translate(${tMoveX}vh, ${tMoveY}vh)`;
