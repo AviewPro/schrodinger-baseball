@@ -193,13 +193,20 @@
             pointer-events: none;
         }
         .credit-logo { width: 67.5vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
-        .credit-extra-cat { width: 40vh; height: auto; margin-top: 5vh; border-radius: 2vh; opacity: 0.9; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
         
         .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 15001; }
-        /* 양옆 이미지 마스크: 바깥쪽(화면 끝쪽)으로 갈수록 투명해지도록 마스크 방향 수정 */
-        .credit-deco-left { left: 5vw; -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%); mask-image: linear-gradient(to left, black 50%, transparent 100%); }
-        .credit-deco-right { right: 5vw; -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%); mask-image: linear-gradient(to right, black 50%, transparent 100%); }
+        /* 양쪽 이미지 개별 그라데이션 적용 */
+        .credit-deco-left { 
+            left: 5vw; 
+            -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%); 
+            mask-image: linear-gradient(to left, black 50%, transparent 100%); 
+        }
+        .credit-deco-right { 
+            right: 5vw; 
+            -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%); 
+            mask-image: linear-gradient(to right, black 50%, transparent 100%); 
+        }
 
         #flash-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
@@ -209,7 +216,7 @@
         .emoji-lane {
             position: fixed; white-space: nowrap; font-size: 5vh; pointer-events: none; z-index: 5; opacity: 0.6;
         }
-        /* 애니메이션 시간을 요청대로 대폭 단축 (기존 대비 11초 감소) */
+        /* 애니메이션 시간 11초 단축 */
         @keyframes slide-h { from { transform: translateX(-150%); } to { transform: translateX(150vw); } }
         @keyframes slide-v { from { transform: translateY(150vh); } to { transform: translateY(-150%); } }
     </style>
@@ -314,7 +321,7 @@
     let paradoxMusicTriggered = false, alarmTriggered = false, zeroOverlayTriggered = false;
     let currentVolume = 0.15;
     let failLoopInterval = null; 
-    let successLoopInterval = null; 
+    let successLoopInterval = null; // 승리 사운드 루프용
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
@@ -333,4 +340,598 @@
     const tipsData = {
         fail: [
             { title: "실패 시 참고팁 (1/3)", desc: "계속 실패하고 있다면 처음에 1234, 5678을 입력하고 나머지는 아무렇게나 입력해도 마지막 관측확률이 체감상 30%정도 되는 것 같았습니다." },
-            { title: "실패 시 참고팁 (2/3)", desc: "그리고 고양이의 알고리즘 상 초반에는 계속 Ball 판정을 주기 때문에 \n의심되는 숫자들을 최대한 모든 자리수에 돌려가며 배치하다보면 \n
+            { title: "실패 시 참고팁 (2/3)", desc: "그리고 고양이의 알고리즘 상 초반에는 계속 Ball 판정을 주기 때문에 \n의심되는 숫자들을 최대한 모든 자리수에 돌려가며 배치하다보면 \n5~6회 사이에는 금새 가능성이 좁혀지게 됩니다." },
+            { title: "실패 시 참고팁 (3/3)", desc: "어느정도 숫자가 특정되면 양자구름에 표시돼있는 숫자들을 보고 \n측정시도만 해도 어렵지 않게 양자고양이를 관측할 수 있을겁니다. 화이팅!" }
+        ],
+        success: [
+            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든\nQuatum Collapse 라는 엔딩이 나오죠. \n그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
+            { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n<span style='color:var(--red);'>이 게임은 정확히 6번 만에 100%로 양자고양이의 위치를 특정하고 7번째 측정까지 진행해서 양자고양이를 잡는 게임입니다.</span>" },
+            { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 위치로 도망칩니다. \n정확히는 볼카운트를 가능한 후보숫자가 가장 많은 쪽으로 내준다는 의미죠." },
+            { title: "성공 시 참고팁 (4/5)", desc: "고정된 알고리즘이기 때문에 똑같은 질문을 100번 하면 100번 똑같이 답합니다. \n일정한 빌드를 만들어서 가장 높은 확률을 따라가면 최적화되는 구조입니다." },
+            { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 굳이 패러독스 엔딩을 보겠다는 건가요? \n그렇다면 환영입니다." }
+        ]
+    };
+
+    function adjustVolume(val) { 
+        currentVolume = parseFloat(val);
+        bgm.volume = currentVolume; 
+        meowSfx.volume = currentVolume; 
+        emergencySfx.volume = Math.min(1.0, currentVolume * 4.0); 
+        failSfx.volume = Math.min(1.0, currentVolume * 3.0); 
+        successSfx.volume = currentVolume;
+        specialClickSfx.volume = Math.min(1.0, currentVolume * 3.0);
+    }
+    
+    adjustVolume(0.15);
+
+    function playClick() { 
+        const sc = clickSfx.cloneNode(); 
+        sc.volume = Math.min(1.0, currentVolume * 8.0); 
+        sc.play().catch(e=>{}); 
+        if(bgm.paused) bgm.play().catch(e=>{}); 
+    }
+
+    function playSpecialClick() { 
+        const sc = specialClickSfx.cloneNode(); 
+        sc.volume = Math.min(1.0, currentVolume * 3.0);
+        sc.play().catch(e=>{ console.log("Special Click Sound Error:", e); }); 
+    }
+
+    function simulateButtonPress(btnId) {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 100);
+        }
+    }
+
+    function clickSpecial(type) {
+        if(type === 'CLR') {
+            simulateButtonPress('clr-btn');
+            playSpecialClick();
+            clearIn(true);
+        }
+        if(type === 'ENT') {
+            simulateButtonPress('ent-btn');
+            playSpecialClick();
+            clickEnter(true);
+        }
+    }
+
+    function startGame() {
+        playClick();
+        if(failLoopInterval) { clearInterval(failLoopInterval); failLoopInterval = null; }
+        if(successLoopInterval) { clearInterval(successLoopInterval); successLoopInterval = null; }
+        document.getElementById('setup').style.display = 'none';
+        document.getElementById('setup-footer').style.display = 'none'; 
+        document.getElementById('game-box').style.display = 'flex';
+        document.getElementById('info-panel').style.display = 'flex';
+        resetGameState();
+    }
+
+    function resetGameState() {
+        aiCandidates = []; history = []; inputStr = ""; turnCount = 7; 
+        paradoxMusicTriggered = false; alarmTriggered = false; zeroOverlayTriggered = false;
+        if(poisonInterval) { clearInterval(poisonInterval); poisonInterval = null; }
+        for(let i=0; i<=9999; i++){
+            let n = i.toString().padStart(4, '0');
+            if(new Set(n).size === 4) aiCandidates.push(n);
+        }
+        updateUI();
+    }
+
+    function restartDirectly() {
+        playClick();
+        if(failLoopInterval) { clearInterval(failLoopInterval); failLoopInterval = null; }
+        if(successLoopInterval) { clearInterval(successLoopInterval); successLoopInterval = null; }
+        bgm.pause();
+        bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
+        bgm.loop = true;
+        bgm.playbackRate = 2.0;
+        document.body.innerHTML = originalBodyContent;
+        adjustVolume(document.getElementById('volume-slider')?.value || 0.15);
+        startGame();
+    }
+
+    function startTutorial() {
+        isTutorial = true; currentTipType = ""; tutorialStep = 1;
+        startGame();
+        document.getElementById('obs-btn').disabled = true;
+        document.getElementById('tutorial-overlay').style.display = 'flex';
+        applyTutorialEffect();
+    }
+
+    window.showTips = function(type) {
+        playClick();
+        isTutorial = false;
+        currentTipType = type;
+        tutorialStep = 0;
+        const tutOverlay = document.getElementById('tutorial-overlay');
+        if (tutOverlay) {
+            tutOverlay.style.display = 'flex';
+            document.getElementById('tut-esc-guide').style.display = 'none';
+            applyTipEffect();
+        }
+    };
+
+    function handleTutNext() {
+        playClick();
+        if (currentTipType) {
+            tutorialStep++;
+            if (tutorialStep >= tipsData[currentTipType].length) {
+                document.getElementById('tutorial-overlay').style.display = 'none';
+                return;
+            }
+            applyTipEffect();
+        } else {
+            nextTutorialStep();
+        }
+    }
+
+    function applyTipEffect() {
+        const title = document.getElementById('tut-title');
+        const desc = document.getElementById('tut-desc');
+        if (title && desc) {
+            const tip = tipsData[currentTipType][tutorialStep];
+            title.innerText = tip.title;
+            desc.innerHTML = tip.desc; // 붉은 글씨 적용을 위해 innerHTML로 변경
+        }
+    }
+
+    function nextTutorialStep() {
+        if (tutorialStep === 1 || tutorialStep === 2) {
+            document.getElementById('tutorial-overlay').style.display = 'none';
+            return;
+        }
+        tutorialStep++;
+        if (tutorialStep > 6) { location.reload(); return; }
+        applyTutorialEffect();
+    }
+
+    function applyTutorialEffect() {
+        const title = document.getElementById('tut-title');
+        const desc = document.getElementById('tut-desc');
+        const nextBtn = document.getElementById('tut-next-btn');
+        const turnCounter = document.getElementById('turn-counter');
+        const chanceBox = document.getElementById('chance-box');
+        
+        document.getElementById('game-box').classList.add('tutorial-dim');
+        document.getElementById('info-panel').classList.add('tutorial-dim');
+        document.querySelectorAll('.key-btn, #ent-btn, #clr-btn, #obs-btn, #display, #log-window, #candidates-box, #chance-area, #zero-btn, .log-item, #chance-box').forEach(el => el.classList.remove('tutorial-highlight'));
+        turnCounter.classList.remove('tutorial-highlight-turn');
+        nextBtn.classList.remove('btn-cyan');
+
+        if (tutorialStep === 1) {
+            title.innerText = "1. 숫자 입력";
+            desc.innerHTML = "입력 패널의 버튼을 눌러서<br>입력하거나 키보드 숫자키를 활용해<br>임의의 4자리 수를 입력해보세요.";
+            document.getElementById('game-box').classList.remove('tutorial-dim');
+            document.querySelectorAll('.key-btn, #zero-btn, #display').forEach(el => el.classList.add('tutorial-highlight'));
+        } else if (tutorialStep === 2) {
+            title.innerText = "2. 양자고양이 좌표 측정";
+            desc.innerHTML = "입력 패널의 엔터키나 키보드 Enter를 통해서 양자 고양이의 좌표를 측정하세요.<br>고양이가 숨어있는 4자리 좌표를 찾으면 됩니다.";
+            document.getElementById('game-box').classList.remove('tutorial-dim');
+            document.getElementById('ent-btn').classList.add('tutorial-highlight');
+            document.getElementById('clr-btn').classList.add('tutorial-highlight');
+        } else if (tutorialStep === 3) {
+            title.innerText = "3. 결과 표시 판넬";
+            desc.innerHTML = "S는 숫자와 위치가 모두 맞는 숫자의 개수이며<br>B는 숫자는 맞지만 위치는 틀린 숫자의 개수입니다.";
+            document.getElementById('game-box').classList.remove('tutorial-dim');
+            const firstLog = document.querySelector('.log-item');
+            if(firstLog) firstLog.classList.add('tutorial-highlight');
+        } else if (tutorialStep === 4) {
+            title.innerText = "4. 양자 구름의 의미";
+            desc.innerHTML = "좌표 측정을 진행하다 보면 양자고양이가 위치할 가능성이 있는 좌표들이<br>선명히 보이기 시작합니다.";
+            document.getElementById('info-panel').classList.remove('tutorial-dim');
+            document.getElementById('candidates-box').classList.add('tutorial-highlight');
+        } else if (tutorialStep === 5) {
+            title.innerText = "5. 관측 확률";
+            desc.innerHTML = "지금까지 판정결과에 부합하는 임의의 숫자로 관측했을 때 찾을 확률입니다.<br>관측은 입력패널의 우상단 보라색버튼을 통해 진행합니다.";
+            document.getElementById('info-panel').classList.remove('tutorial-dim');
+            chanceBox.classList.add('tutorial-highlight');
+            document.getElementById('game-box').classList.remove('tutorial-dim');
+            document.getElementById('obs-btn').classList.add('tutorial-highlight');
+        } else if (tutorialStep === 6) {
+            title.innerText = "6. 횟수 제한 및 엔딩";
+            desc.innerHTML = "양자고양이는 언제나 가장 잘 숨을 수 있는 좌표로 도망칩니다.<br><span style='color:var(--red); font-weight:bold;'>7번의 좌표 측정으로 고양이의 좌표를 찾아보세요!</span><br>고양이의 좌표를 정확히 측정하면 색다른 엔딩이 나올지도?";
+            document.getElementById('info-panel').classList.remove('tutorial-dim');
+            turnCounter.classList.add('tutorial-highlight-turn');
+            nextBtn.classList.add('btn-cyan');
+            nextBtn.innerText = "게임하러 가기";
+        }
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (document.getElementById('credit-overlay')?.style.display === 'flex') { closeCredits(); return; }
+            if (isTutorial) location.reload();
+            if (document.getElementById('obs-overlay')?.style.display === 'flex') { document.getElementById('obs-overlay').style.display = 'none'; }
+            return;
+        }
+        if (document.getElementById('obs-overlay')?.style.display === 'flex') {
+            if (e.key === 'Enter') submitObs(); return;
+        }
+        
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            clickSpecial('ENT');
+            return;
+        }
+        
+        if (e.key >= '0' && e.key <= '9') {
+            const btn = document.querySelector(e.key === '0' ? '#zero-btn' : `.key-btn[data-key="${e.key}"]`);
+            if(btn) { btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 100); }
+            press(e.key);
+            return;
+        }
+        
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+            clickSpecial('CLR');
+            return;
+        }
+    });
+
+    function press(n) { 
+        playClick(); 
+        if(inputStr.length < 4 && !inputStr.includes(n)) { 
+            inputStr += n; 
+            document.getElementById('display').innerText = inputStr; 
+            if (isTutorial && tutorialStep === 1 && inputStr.length === 4) {
+                setTimeout(() => { tutorialStep = 2; document.getElementById('tutorial-overlay').style.display = 'flex'; applyTutorialEffect(); }, 300);
+            }
+        } 
+    }
+
+    function clearIn(isSpecial) { if(!isSpecial) playClick(); inputStr = ""; document.getElementById('display').innerText = "----"; }
+    
+    function clickEnter(isSpecial) {
+        if(inputStr.length === 4 && turnCount > 0) {
+            if(!isSpecial) playClick();
+            const res = aiRespond(inputStr);
+            history.push({ n: inputStr, s: res.s, b: res.b });
+            turnCount--; clearIn(true); updateUI();
+            if (isTutorial && tutorialStep === 2) {
+                setTimeout(() => { tutorialStep = 3; document.getElementById('tutorial-overlay').style.display = 'flex'; applyTutorialEffect(); }, 500);
+            }
+        }
+    }
+
+    function aiRespond(guess) {
+        const outcomes = {};
+        aiCandidates.forEach(cand => {
+            let s=0, b=0;
+            for(let i=0; i<4; i++){ if(guess[i] === cand[i]) s++; else if(cand.includes(guess[i])) b++; }
+            const key = `${s}S${b}B`;
+            if(!outcomes[key]) outcomes[key] = [];
+            outcomes[key].push(cand);
+        });
+        let bestKey = ""; let maxCount = -1;
+        for(let key in outcomes) {
+            if(key === "4S0B") continue; 
+            if(outcomes[key].length > maxCount) { maxCount = outcomes[key].length; bestKey = key; }
+        }
+        if(!bestKey || aiCandidates.length <= 1) {
+            const fakeS = Math.floor(Math.random() * 3);
+            const fakeB = Math.floor(Math.random() * 3);
+            bestKey = `${fakeS}S${fakeB}B`;
+            aiCandidates = aiCandidates.filter(c => c !== guess); 
+        } else { aiCandidates = outcomes[bestKey]; }
+        const match = bestKey.match(/(\d)S(\d)B/);
+        return { s: parseInt(match[1]), b: parseInt(match[2]) };
+    }
+
+    function startPoisonLoop() {
+        if(poisonInterval) return;
+        const targetText = "Cat is Poisoned in the Box";
+        const el = document.getElementById('chance-val');
+        let index = targetText.length;
+        let isDeleting = true;
+
+        poisonInterval = setInterval(() => {
+            if (isDeleting) {
+                el.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">${targetText.substring(0, index)}</span>`;
+                index--;
+                if (index < 0) { isDeleting = false; }
+            } else {
+                el.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">${targetText.substring(0, index)}</span>`;
+                index++;
+                if (index > targetText.length) { isDeleting = true; }
+            }
+        }, 150);
+    }
+
+    function updateUI() {
+        const turnCounter = document.getElementById('turn-counter');
+        turnCounter.innerText = turnCount;
+        const prob = aiCandidates.length === 0 ? 0 : (1 / aiCandidates.length * 100);
+        const chanceValEl = document.getElementById('chance-val');
+        const chanceTitleEl = document.getElementById('chance-title');
+        const chanceBoxEl = document.getElementById('chance-box');
+        const catImg = document.getElementById('prob-cat-img');
+        const deadX = document.getElementById('dead-x');
+        const flashOverlay = document.getElementById('flash-overlay');
+        
+        if(aiCandidates.length === 0) {
+            if(!paradoxMusicTriggered) {
+                bgm.pause();
+                bgm = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
+                bgm.loop = true;
+                bgm.play().catch(e => {});
+                paradoxMusicTriggered = true;
+            }
+            if(!zeroOverlayTriggered) {
+                flashOverlay.style.background = 'radial-gradient(circle, rgba(0, 255, 65, 0) 85%, rgba(0, 255, 65, 0.4) 100%)';
+                flashOverlay.style.opacity = '1';
+                setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
+                zeroOverlayTriggered = true;
+                startPoisonLoop();
+            }
+            chanceTitleEl.style.display = 'none';
+            chanceBoxEl.style.borderColor = 'var(--green)';
+            catImg.style.opacity = '0'; catImg.style.filter = 'blur(2vh)';
+            turnCounter.style.color = 'var(--green)'; turnCounter.style.textShadow = '0 0 2vh var(--green)';
+            deadX.style.display = 'block'; 
+        } else {
+            deadX.style.display = 'none';
+            if(poisonInterval) { clearInterval(poisonInterval); poisonInterval = null; }
+
+            if (prob === 100) {
+                chanceValEl.style.color = 'var(--red)';
+                chanceValEl.style.textShadow = '0 0 2.5vh var(--red)';
+                if(!alarmTriggered) {
+                    emergencySfx.play().catch(e=>{});
+                    flashOverlay.style.background = 'radial-gradient(circle, rgba(255, 0, 0, 0) 85%, rgba(255, 0, 0, 0.4) 100%)';
+                    flashOverlay.style.opacity = '1';
+                    setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
+                    alarmTriggered = true;
+                }
+            } else if (prob >= 10 && prob <= 51) {
+                chanceValEl.style.color = 'var(--cyan)';
+                chanceValEl.style.textShadow = '0 0 2.5vh var(--cyan)';
+                alarmTriggered = false;
+            } else {
+                chanceValEl.style.color = 'var(--purple)';
+                chanceValEl.style.textShadow = '0 0 2.5vh var(--purple)';
+                alarmTriggered = false;
+            }
+
+            chanceTitleEl.style.display = 'block';
+            chanceTitleEl.innerText = "Measuring Energy Level";
+            chanceValEl.innerText = prob.toFixed(2) + "%";
+            chanceBoxEl.style.borderColor = (prob === 100) ? 'var(--red)' : (prob >= 10 && prob <= 51 ? 'var(--cyan)' : 'var(--purple)');
+            turnCounter.style.color = (prob === 100) ? 'var(--red)' : (prob >= 10 && prob <= 51 ? 'var(--cyan)' : 'var(--purple)');
+            const blurAmount = Math.max(0, (prob * 0.05));
+            const opacityAmount = Math.max(0.1, 1 - (prob / 100));
+            catImg.style.display = 'block'; catImg.style.opacity = opacityAmount;
+            catImg.style.filter = `blur(${blurAmount}vh)`; 
+            catImg.style.borderColor = (prob === 100) ? 'var(--red)' : (prob >= 10 && prob <= 51 ? 'var(--cyan)' : 'var(--purple)');
+        }
+        
+        document.getElementById('log-window').innerHTML = history.map(h => {
+            const resultText = (h.s === 0 && h.b === 0) ? `<span class="log-out">OUT</span>` : `${h.s}S / ${h.b}B`;
+            return `<div class="log-item"><span class="log-n">${h.n}</span><span class="log-sb">${resultText}</span></div>`;
+        }).join('');
+        document.getElementById('log-window').scrollTop = document.getElementById('log-window').scrollHeight;
+
+        const slice = [...aiCandidates].sort(() => 0.5 - Math.random()).slice(0, 50);
+        const pixelateStrength = prob >= 25 ? 0 : (25 - prob) / 35; 
+        document.getElementById('cand-list').innerHTML = slice.map(c => `<div class="cand-item" style="filter: blur(${pixelateStrength}vh) contrast(180%);">${c}</div>`).join('');
+
+        const statusEl = document.getElementById('status');
+        const entBtn = document.getElementById('ent-btn');
+        if(turnCount <= 0) {
+            entBtn.disabled = true;
+            statusEl.innerText = "측정 완료 (관측만 가능)";
+            statusEl.style.color = "var(--red)";
+        } else {
+            entBtn.disabled = false;
+            statusEl.innerText = "고양이 위치 관측 중...";
+            statusEl.style.color = "var(--cyan)";
+        }
+    }
+
+    function renderProbabilityCloud() {
+        const field = document.getElementById('quantum-field');
+        field.innerHTML = "";
+        const neons = ['var(--cyan)', 'var(--purple)', 'var(--green)', 'var(--red)'];
+        const list = aiCandidates.length > 0 ? aiCandidates : ["ERROR", "VOID", "0000"];
+        list.slice(0, 80).forEach(num => {
+            const span = document.createElement('span');
+            span.className = 'bg-candidate';
+            span.innerText = num;
+            let x, y;
+            do { x = Math.random() * 85 + 5; y = Math.random() * 85 + 5; } while (x > 25 && x < 75 && y > 20 && y < 80);
+            span.style.left = x + "%"; span.style.top = y + "%";
+            span.style.color = neons[Math.floor(Math.random() * neons.length)];
+            span.style.animationDelay = (Math.random() * 4) + "s";
+            field.appendChild(span);
+        });
+    }
+
+    function clickObs() {
+        if(isTutorial) return;
+        playSpecialClick();
+        if(aiCandidates.length === 0) {
+            meowSfx.play().catch(e=>{}); 
+            renderEndGame("Quantum Paradox", "불가능한 세계선", `미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
+            return;
+        }
+        renderProbabilityCloud();
+        document.getElementById('obs-overlay').style.display = 'flex';
+        setTimeout(() => { const obsInput = document.getElementById('obs-num'); if(obsInput){ obsInput.value = ""; obsInput.focus(); } }, 10);
+    }
+
+    function submitObs() {
+        const guess = document.getElementById('obs-num').value;
+        if(guess.length === 4) {
+            playClick();
+            let realSecret = aiCandidates[Math.floor(Math.random() * aiCandidates.length)];
+            if(guess === realSecret) {
+                successSfx.play().catch(e=>{});
+                // 6초마다 코골이 사운드 실행
+                if(successLoopInterval) clearInterval(successLoopInterval);
+                successLoopInterval = setInterval(() => {
+                    successSfx.currentTime = 0;
+                    successSfx.play().catch(e=>{});
+                }, 6000);
+                
+                renderEndGame("Quantum Collapse", "승리", `관측 성공! 당신의 고양이는 살아있었습니다<br>당신은 고양이의 위치만을 알 수 있었습니다`, 'var(--green)', true, false);
+            } else {
+                failSfx.play().catch(e=>{});
+                if(failLoopInterval) clearInterval(failLoopInterval);
+                failLoopInterval = setInterval(() => {
+                    failSfx.currentTime = 0;
+                    failSfx.play().catch(e=>{});
+                }, 6000);
+                
+                renderEndGame("Quantum Collapse", "패배", `관측 실패! 당신의 고양이는 사라졌습니다<br>당신은 고양이의 운동량만을 알 수 있었습니다`, 'var(--red)', false, false);
+            }
+        }
+    }
+
+    function renderEndGame(type, result, msg, color, isWin, isParadox) {
+        const winGif = "cat in the box.gif";
+        const paradoxGif = "Neon cat 2.gif";
+        const loseImg = "box.gif";
+        let mediaUrl = isParadox ? paradoxGif : (isWin ? winGif : loseImg);
+        
+        let emojiLanes = "";
+        if(isParadox) {
+            const longLane = "🐈 ".repeat(22);
+            // 반복 시간 11초씩 단축
+            emojiLanes = `
+                <div class="emoji-lane" style="top:15vh; animation: slide-h 29s linear infinite;">${longLane}</div>
+                <div class="emoji-lane" style="bottom:15vh; animation: slide-h 34s linear infinite reverse;">${longLane}</div>
+                <div class="emoji-lane" style="left:10vw; animation: slide-v 27s linear infinite;">${longLane.split(' ').join('<br>')}</div>
+                <div class="emoji-lane" style="right:10vw; animation: slide-v 31s linear infinite reverse;">${longLane.split(' ').join('<br>')}</div>
+            `;
+        }
+
+        let subButtons = "";
+        if (isParadox) {
+            subButtons = `<button onclick="window.showCredits()" style="width:65vh; padding:4vh 0; margin-top:5vh; background:#222; color:var(--green); border:0.4vh solid var(--green); cursor:pointer; font-size:4vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh var(--green); z-index:100;">Credits</button>`;
+        } else {
+            const tipType = isWin ? 'success' : 'fail';
+            subButtons = `
+                <div style="display:flex; flex-direction:column; gap: 1.5vh; align-items: center; margin-top:3vh; width: 62vh; z-index:100;">
+                    <button onclick="window.showTips('${tipType}')" style="width:100%; padding:2.5vh 0; background:#333; color:${color}; border:0.2vh solid ${color}; cursor:pointer; font-size:2.8vh; border-radius:1.5vh; font-weight:bold;">TIPS</button>
+                    <div style="display:flex; gap: 2vh; width: 100%;">
+                        <button onclick="location.reload()" style="flex:1; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid #444; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Main Menu</button>
+                        <button onclick="restartDirectly()" style="flex:2; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid ${color}; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Restart</button>
+                    </div>
+                </div>`;
+        }
+
+        document.body.innerHTML = `
+            ${emojiLanes}
+            <div id="sound-control" style="z-index:20000;">
+                <span class="sound-icon">♪</span>
+                <input type="range" id="volume-slider-end" min="0" max="1" step="0.01" value="${currentVolume}" oninput="adjustVolume(this.value)">
+                <span class="sound-icon" style="font-size:1vh;">VOL</span>
+            </div>
+            <div id="credit-overlay">
+                <img src="도트고양이.gif" class="credit-deco credit-deco-left">
+                <img src="도트고양이3.gif" class="credit-deco credit-deco-right">
+                <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
+                    <div id="credit-content"></div>
+                </div>
+                <div class="credit-esc">Press ESC to Close</div>
+            </div>
+            <div id="tutorial-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:5000; flex-direction:column; align-items:center; justify-content:center;">
+                <div class="tutorial-msg-box">
+                    <h3 id="tut-title"></h3>
+                    <p id="tut-desc"></p>
+                    <button id="tut-next-btn" onclick="handleTutNext()">확인</button>
+                    <div id="tut-esc-guide" class="esc-guide" style="display:none;"></div>
+                </div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; box-sizing: border-box; position:relative; z-index:50;">
+                <img src="${mediaUrl}" style="border:0.4vh solid ${color}; border-radius:4vh; box-shadow: 0 0 3vh ${color}; width: 45vh; height: 45vh; object-fit: cover; margin-bottom: 2vh;">
+                <h1 style="font-size:7vh; color:${color}; margin: 1vh 0; text-shadow:0 0 2vh ${color};">${type}</h1>
+                <h2 style="font-size:4vh; color:#fff; margin-bottom: 1vh;">${result}</h2>
+                <p style="color:#aaa; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
+                ${subButtons}
+            </div>`;
+            
+        document.getElementById('volume-slider-end').addEventListener('input', (e) => {
+            adjustVolume(e.target.value);
+        });
+    }
+
+    let creditScrollInterval = null;
+    let creditY = 0;
+    let creditSpeed = 1;
+
+    window.showCredits = function() {
+        const overlay = document.getElementById('credit-overlay');
+        const content = document.getElementById('credit-content');
+        if (!overlay || !content) return;
+        
+        const text = `제 첫 게임,  슈뢰딩거 베이스볼을 끝까지 즐겨주셔서 정말 감사합니다!
+사실 보잘것 없는 게임이지만, 어릴 때부터 꿈꾸던 '나만의 게임 만들기'를 
+드디어 해볼 수 있어서 만드는 내내 정말 즐거웠습니다.
+
+이 게임의 원래 아이디어는 가짜 숫자야구게임의 변형룰에서 시작됐습니다. 처음엔 사람간에 치열한 두뇌 게임을 생각했죠. 수비자가 제한없이 거짓말을 할 수 있고, 공격자는 '이거는 말이 안 된다!' 싶을 때 '모순'을 선언해서 끝내는 방식이었거든요. 반대로 수비자는 모순이 아니라는 걸 '반증'하면 이기는 거고요.
+
+근데 막상 혼자 시뮬레이션을 돌려보니까 생각보다 어렵더라고요. 단 4턴 만에 논리적으로 앞뒤가 안 맞는 상황이 오기도 하고, 완벽하게 거짓말을 섞어가며 카운트를 준다는 게 생각보다 엄청난 사고력을 필요로 한다는 걸 깨달았습니다. 그래서 제미나이랑 "완벽하게 거짓말하는 상대를 이기려면 몇 번이나 걸릴까?" 라는 질문에서 지금의 게임이 구상되었습니다.
+
+이름도 처음엔 '패러독스 베이스볼' 같은 걸 생각했는데, "슈뢰딩거 베이스볼"이 꽂히더라고요. 
+모든 숫자의 가능성이 중첩되어 있다가, 관측하면 할수록 가능성이 줄어들고 
+결국 하나의 숫자로 정해지는 컨셉! 제가 원하던 느낌이랑 딱 맞아떨어져서 파바박하고 만들어봤습니다.
+
+사실 전 프로그래밍 지식이 제로에 가까워서 AI를 쓴다고 해도 이렇게 빠르게 될 줄은 몰랐습니다. 
+구상에 반나절, 코드 짜는 데 하루 정도 걸렸는데, 막히는 걸 바로바로 물어보면서 
+코드를 만들어갈 수 있어서 빨랐던 것 같습니다.
+
+마음 같아서는 '개쳐귀여운 고양이' 이미지랑 컨셉을 막 쏟아붓고 싶었는데... 이게 생각보다 어렵더라고요. 
+이미지를 찾아도 게임에 넣으니깐 제가 원하는 느낌이 안 살아서 결국 지금같은 모습이 됐습니다. 
+
+세상이 참 빠르게 변하는 것 같습니다. 앞으로도 재밌는 아이디어가 떠오르면 게임을 만들어 보겠습니다. 
+어쩌면 슈뢰딩거 베이스볼 PVP버젼도 만들 수 있을 것 같습니다.
+게임은 끝입니다. 귀여운 고양이나 실컷 구경하다 가세요! 
+
+-AVIEW-`;
+        
+        // 귀여운고양이.jpg 이미지 추가 및 구조 유지
+        content.innerHTML = `<div>${text}</div><img src="귀여운고양이.jpg" style="width:40vh; height:auto; margin-top:5vh; border-radius:2vh;"><img src="Aview.png" class="credit-logo">`;
+        overlay.style.display = 'flex';
+        creditY = window.innerHeight;
+        creditSpeed = 1;
+        
+        if (creditScrollInterval) clearInterval(creditScrollInterval);
+        creditScrollInterval = setInterval(() => {
+            creditY -= creditSpeed;
+            content.style.transform = `translateY(${creditY}px)`;
+            if (creditY < -content.scrollHeight) {
+                clearInterval(creditScrollInterval);
+            }
+        }, 16);
+    };
+
+    window.accelerateCredits = function(e) { if(e) e.stopPropagation(); creditSpeed = 5; };
+    window.normalizeCredits = function(e) { if(e) e.stopPropagation(); creditSpeed = 1; };
+    window.closeCredits = function() {
+        const overlay = document.getElementById('credit-overlay');
+        if(overlay) {
+            overlay.style.display = 'none';
+            if (creditScrollInterval) clearInterval(creditScrollInterval);
+        }
+    };
+
+    setInterval(() => {
+        document.querySelectorAll('.cand-item').forEach(item => {
+            const moveX = (Math.random()-0.5)*2.5; const moveY = (Math.random()-0.5)*2.5;
+            item.style.transform = `translate(${moveX}vh, ${moveY}vh)`;
+        });
+        const turnCounter = document.getElementById('turn-counter');
+        if(turnCounter) {
+            if (turnCount > 0) {
+                const intensity = (turnCount) * 1.5; 
+                const tMoveX = (Math.random()-0.5) * intensity;
+                const tMoveY = (Math.random()-0.5) * intensity;
+                turnCounter.style.transform = `translate(${tMoveX}vh, ${tMoveY}vh)`;
+            } else { turnCounter.style.transform = `translate(0px, 0px)`; }
+        }
+    }, 2000);
+</script>
+</body>
+</html>
