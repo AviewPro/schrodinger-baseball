@@ -30,14 +30,14 @@
             -webkit-user-select: none;
         }
 
-        /* 버전 표기 스타일 */
+        /* 버전 표기 스타일 - 폰트 크기 2배 확대 */
         #version-tag {
             position: fixed;
             bottom: 1.5vh;
             left: 2vh;
             color: #555;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2vh;
+            font-size: 2.4vh;
             letter-spacing: 0.1vh;
             z-index: 500;
         }
@@ -183,9 +183,10 @@
         }
         .tutorial-dim { opacity: 0.2 !important; pointer-events: none !important; }
 
+        /* 엔딩 크레딧 레이어 수정: 이미지를 반투명 검은 배경 뒤에 배치 */
         #credit-overlay { 
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: rgba(0,0,0,0.98); z-index: 15000; flex-direction: column; align-items: center; overflow: hidden;
+            background: rgba(0,0,0,0.5); z-index: 15000; flex-direction: column; align-items: center; overflow: hidden;
         }
         #credit-container {
             position: relative;
@@ -193,10 +194,12 @@
             height: 100%;
             border-left: 0.2vh solid rgba(255,255,255,0.3);
             border-right: 0.2vh solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.98); /* 중앙 텍스트 영역은 어둡게 유지 */
             display: flex;
             justify-content: center;
             overflow: hidden;
             pointer-events: auto;
+            z-index: 15002;
         }
         #credit-content {
             position: absolute; top: 100%; width: 90%; text-align: center; color: #ddd;
@@ -204,12 +207,12 @@
             transition: none;
             pointer-events: none;
         }
-        .credit-logo { width: 33.75vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
-        .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
+        .credit-logo { width: 16.875vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
+        .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; z-index: 15003; }
         
-        .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 15001; }
+        /* 반투명 배경 뒤에 위치하도록 z-index 조정 */
+        .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 14999; }
         
-        /* 양쪽 GIF 이미지에만 개별 그라데이션 적용 (전체화면 효과 지움) */
         .credit-deco-left { 
             left: 5vw; 
             -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%); 
@@ -335,6 +338,7 @@
     let currentVolume = 0.15;
     let failLoopInterval = null; 
     let successLoopInterval = null; 
+    let meowLoopInterval = null; // 패러독스 엔딩용 야옹 루프 추가
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
@@ -367,13 +371,14 @@
 
     function adjustVolume(val) { 
         currentVolume = parseFloat(val);
-        // 패러독스 BGM(SoundHelix-Song-8.mp3)인 경우 볼륨 30%로 제한
+        // 패러독스 BGM(SoundHelix-Song-8.mp3) 볼륨 20% 키움 (기존 0.3 -> 0.36)
         if (bgm.src.includes("SoundHelix-Song-8.mp3")) {
-            bgm.volume = currentVolume * 0.3;
+            bgm.volume = Math.min(1.0, currentVolume * 0.36);
         } else {
             bgm.volume = currentVolume; 
         }
-        meowSfx.volume = currentVolume; 
+        // 패러독스 야옹 소리 볼륨 30% 키움 (기존 1.0 -> 1.3 계수 적용 후 min 처리)
+        meowSfx.volume = Math.min(1.0, currentVolume * 1.3); 
         emergencySfx.volume = Math.min(1.0, currentVolume * 4.0); 
         failSfx.volume = Math.min(1.0, currentVolume * 3.0); 
         successSfx.volume = currentVolume;
@@ -420,6 +425,7 @@
         playClick();
         if(failLoopInterval) { clearInterval(failLoopInterval); failLoopInterval = null; }
         if(successLoopInterval) { clearInterval(successLoopInterval); successLoopInterval = null; }
+        if(meowLoopInterval) { clearInterval(meowLoopInterval); meowLoopInterval = null; }
         document.getElementById('setup').style.display = 'none';
         document.getElementById('setup-footer').style.display = 'none'; 
         document.getElementById('game-box').style.display = 'flex';
@@ -442,6 +448,7 @@
         playClick();
         if(failLoopInterval) { clearInterval(failLoopInterval); failLoopInterval = null; }
         if(successLoopInterval) { clearInterval(successLoopInterval); successLoopInterval = null; }
+        if(meowLoopInterval) { clearInterval(meowLoopInterval); meowLoopInterval = null; }
         bgm.pause();
         bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
         bgm.loop = true;
@@ -673,7 +680,8 @@
                 bgm.pause();
                 bgm = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
                 bgm.loop = true;
-                bgm.volume = currentVolume * 0.3; // 볼륨 30%로 조정
+                // BGM 볼륨 20% 키움 (0.3 -> 0.36)
+                bgm.volume = Math.min(1.0, currentVolume * 0.36);
                 bgm.play().catch(e => {});
                 paradoxMusicTriggered = true;
             }
@@ -770,7 +778,15 @@
         if(isTutorial) return;
         playSpecialClick();
         if(aiCandidates.length === 0) {
+            meowSfx.volume = Math.min(1.0, currentVolume * 1.3); // 야옹 소리 30% 증가
             meowSfx.play().catch(e=>{}); 
+            // 6초마다 야옹 루프 추가
+            if(meowLoopInterval) clearInterval(meowLoopInterval);
+            meowLoopInterval = setInterval(() => {
+                meowSfx.currentTime = 0;
+                meowSfx.play().catch(e=>{});
+            }, 6000);
+
             renderEndGame("Quantum Paradox", "불가능한 세계선", `미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
             return;
         }
@@ -909,7 +925,6 @@
 
 -AVIEW-`;
         
-        // Aview.png 크기 50% 축소 반영
         content.innerHTML = `<div>${text}</div><img src="귀여운고양이.jpg" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh;"><img src="Aview.png" class="credit-logo">`;
         overlay.style.display = 'flex';
         creditY = window.innerHeight;
