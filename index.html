@@ -266,8 +266,8 @@
 </div>
 
 <div id="setup-footer">
-    이 게임은 제미나이와 그록을 적극 이용하여 제작되었습니다.<br>
-    저작권은 나한테 있나? 잘 모르겠습니다. 그냥 자유롭게 즐겨주세요.
+    이 게임은 제미나이와 그록을 이용하여 제작되었습니다.<br>
+    저작권은 나한테 있나? 잘 모르겠습니다. 그냥 가볍게 즐겨주세요.
 </div>
 
 <div class="game-container">
@@ -342,27 +342,29 @@
 
     const tipsData = {
         fail: [
-            { title: "실패 시 참고팁 (1/3)", desc: "이 게임은 처음에 1234, 5678을 입력하고 나머지는 아무렇게나 입력해도 \n마지막 관측확률이 체감상 30%정도 되는 것 같았습니다." },
+            { title: "실패 시 참고팁 (1/3)", desc: "계속 실패하고 있다면 처음에 1234, 5678을 입력하고 나머지는 아무렇게나 입력해도 마지막 관측확률이 체감상 30%정도 되는 것 같았습니다." },
             { title: "실패 시 참고팁 (2/3)", desc: "그리고 고양이의 알고리즘 상 초반에는 계속 Ball 판정을 주기 때문에 \n의심되는 숫자들을 최대한 모든 자리수에 돌려가며 배치하다보면 \n5~6회 사이에는 금새 가능성이 좁혀지게 됩니다." },
-            { title: "실패 시 참고팁 (3/3)", desc: "어느정도 숫자가 특정되면 양자구름에 표시돼있는 숫자들을 보면서 \n측정시도만 해도 2살 아가 먼치킨이 아닌 이상 \n양자고양이를 관측할 수 있을겁니다. 화이팅!" }
+            { title: "실패 시 참고팁 (3/3)", desc: "어느정도 숫자가 특정되면 양자구름에 표시돼있는 숫자들을 보고 \n측정시도만 해도 어렵지 않게 양자고양이를 관측할 수 있을겁니다. 화이팅!" }
         ],
         success: [
-            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든 \nQuatum Collapse 엔딩이 나오죠. 그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
-            { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n<span style='color:var(--red);'>이 게임은 정확히 6회까지 100%로 양자고양이의 좌표를 특정하고 \n7회차 측정까지 진행해서 양자고양이를 잡는 게임입니다.</span>" },
-            { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 좌표로 도망칩니다. \n정확히는 가능한 후보숫자가 가장 많은 볼카운트 대답한다는 의미죠." },
-            { title: "성공 시 참고팁 (4/5)", desc: "고정된 알고리즘이기 때문에 똑같은 질문을 100번 하면 100번 똑같이 답합니다. \n일정한 빌드를 만들어서 가장 높은 확률을 따라가면 최적화되는 구조입니다. \n숫자를 교차로 배치해서 계속해서 숨을곳을 좁히세요." },
-            { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 굳이 패러독스 엔딩을 보겠다는 건가요? 그런분은 정말 환영입니다." }
+            { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든\nQuatum Collapse 라는 엔딩이 나오죠. \n그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
+            { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n<span style='color:var(--red);'>이 게임은 정확히 6번 만에 100%로 양자고양이의 위치를 특정하고 7번째 측정까지 진행해서 양자고양이를 잡는 게임입니다.</span>" },
+            { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 위치로 도망칩니다. \n정확히는 볼카운트를 가능한 후보숫자가 가장 많은 쪽으로 내준다는 의미죠." },
+            { title: "성공 시 참고팁 (4/5)", desc: "고정된 알고리즘이기 때문에 똑같은 질문을 100번 하면 100번 똑같이 답합니다. \n일정한 빌드를 만들어서 가장 높은 확률을 따라가면 최적화되는 구조입니다." },
+            { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 굳이 패러독스 엔딩을 보겠다는 건가요? \n그렇다면 환영입니다." }
         ]
     };
 
     function adjustVolume(val) { 
         currentVolume = parseFloat(val);
+        // 패러독스 BGM(SoundHelix-Song-8.mp3) 볼륨 30% 추가 상향 (0.432 -> 0.5616)
         if (bgm.src.includes("SoundHelix-Song-8.mp3")) {
-            bgm.volume = Math.min(1.0, currentVolume * 1.0);
+            bgm.volume = Math.min(1.0, currentVolume * 0.5616);
         } else {
             bgm.volume = currentVolume; 
         }
-        meowSfx.volume = Math.min(1.0, currentVolume * 1.2); 
+        // 패러독스 고양이 효과음 볼륨 유지 (이전 요청 기준 1.17 계수)
+        meowSfx.volume = Math.min(1.0, currentVolume * 1.17); 
         emergencySfx.volume = Math.min(1.0, currentVolume * 4.0); 
         failSfx.volume = Math.min(1.0, currentVolume * 3.0); 
         successSfx.volume = currentVolume;
@@ -513,7 +515,7 @@
 
         if (tutorialStep === 1) {
             title.innerText = "1. 숫자 입력";
-            desc.innerHTML = "입력 패널의 버튼을 눌러서 입력하거나 키보드 숫자키를 활용해<br>임의의 4자리 수를 입력해보세요.";
+            desc.innerHTML = "입력 패널의 버튼을 눌러서<br>입력하거나 키보드 숫자키를 활용해<br>임의의 4자리 수를 입력해보세요.";
             document.getElementById('game-box').classList.remove('tutorial-dim');
             document.querySelectorAll('.key-btn, #zero-btn, #display').forEach(el => el.classList.add('tutorial-highlight'));
         } else if (tutorialStep === 2) {
@@ -530,7 +532,7 @@
             if(firstLog) firstLog.classList.add('tutorial-highlight');
         } else if (tutorialStep === 4) {
             title.innerText = "4. 양자 구름의 의미";
-            desc.innerHTML = "좌표 측정을 진행하다 보면 양자고양이가 위치할 가능성이 있는 좌표들이<br>점차 선명히 보이기 시작합니다.";
+            desc.innerHTML = "좌표 측정을 진행하다 보면 양자고양이가 위치할 가능성이 있는 좌표들이<br>선명히 보이기 시작합니다.";
             document.getElementById('info-panel').classList.remove('tutorial-dim');
             document.getElementById('candidates-box').classList.add('tutorial-highlight');
         } else if (tutorialStep === 5) {
@@ -542,7 +544,7 @@
             document.getElementById('obs-btn').classList.add('tutorial-highlight');
         } else if (tutorialStep === 6) {
             title.innerText = "6. 횟수 제한 및 엔딩";
-            desc.innerHTML = "양자고양이는 언제나 가장 잘 숨을 수 있는 좌표로 도망칩니다.<br><span style='color:var(--red); font-weight:bold;'>7회의 좌표 측정만으로 고양이의 좌표를 찾아보세요!</span><br>고양이의 좌표를 정확히 측정하면 색다른 엔딩이 나올지도?";
+            desc.innerHTML = "양자고양이는 언제나 가장 잘 숨을 수 있는 좌표로 도망칩니다.<br><span style='color:var(--red); font-weight:bold;'>7번의 좌표 측정으로 고양이의 좌표를 찾아보세요!</span><br>고양이의 좌표를 정확히 측정하면 색다른 엔딩이 나올지도?";
             document.getElementById('info-panel').classList.remove('tutorial-dim');
             turnCounter.classList.add('tutorial-highlight-turn');
             nextBtn.classList.add('btn-cyan');
@@ -735,7 +737,7 @@
             statusEl.style.color = "var(--red)";
         } else {
             entBtn.disabled = false;
-            statusEl.innerText = "고양이 좌표 측정 중...";
+            statusEl.innerText = "고양이 위치 관측 중...";
             statusEl.style.color = "var(--cyan)";
         }
     }
@@ -769,7 +771,7 @@
                 meowSfx.play().catch(e=>{});
             }, 6000);
 
-            renderEndGame("Quantum Paradox", "불가능한 세계선", `축하합니다! 당신은 미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
+            renderEndGame("Quantum Paradox", "불가능한 세계선", `미시세계의 모든 가능성을 부정하고 <br>당신은 고양이의 위치와 운동량을 모두 알아냈습니다`, 'var(--green)', true, true);
             return;
         }
         renderProbabilityCloud();
@@ -909,8 +911,9 @@
 앞으로도 재밌는 아이디어가 떠오르면 게임을 만들어 보겠습니다. 
 어쩌면 슈뢰딩거 베이스볼 PVP버젼도 만들 수 있을 것 같습니다.
 
-이상 게임은 끝입니다. 감사합니다!
-고양이 사진 찾으면서 주워온 귀여운 고양이짤이라도 구경하다 가세요! `;
+이상 게임은 끝입니다. 
+감사합니다! 고양이는 정말 귀엽네요...
+고양이 사진 찾으면서 주워온 귀여운 고양이짤이라도 구경하다 가세요! :) `;
         
         content.innerHTML = `
             <div>${text}</div>
