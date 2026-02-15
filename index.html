@@ -190,7 +190,7 @@
         .side-cat-box {
             flex: 1; display: flex; align-items: center; justify-content: center; padding: 2vh; height: 100%; z-index: 15001;
         }
-        .side-cat-img { width: 35vh; height: 35vh; border-radius: 2vh; border: 0.2vh solid #444; object-fit: cover; opacity: 0.7; }
+        .side-cat-img { width: 17.5vh; height: 17.5vh; border-radius: 2vh; border: 0.2vh solid #444; object-fit: cover; opacity: 0.7; }
         
         #credit-container {
             position: relative;
@@ -241,11 +241,11 @@
 </div>
 
 <div id="credit-overlay">
-    <div class="side-cat-box"><img src="귀여운고양이2.jpg" class="side-cat-img"></div>
+    <div class="side-cat-box"><img src="귀여운고양이도트2.jpg" class="side-cat-img"></div>
     <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
         <div id="credit-content"></div>
     </div>
-    <div class="side-cat-box"><img src="귀여운고양이3.jpg" class="side-cat-img"></div>
+    <div class="side-cat-box"><img src="귀여운고양이도트3.jpg" class="side-cat-img"></div>
     <div class="credit-esc">Press ESC to Close</div>
 </div>
 
@@ -851,11 +851,11 @@
                 <span class="sound-icon" style="font-size:1vh;">VOL</span>
             </div>
             <div id="credit-overlay">
-                <div class="side-cat-box"><img src="귀여운고양이2.jpg" class="side-cat-img"></div>
+                <div class="side-cat-box"><img src="귀여운고양이도트2.jpg" class="side-cat-img"></div>
                 <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
                     <div id="credit-content"></div>
                 </div>
-                <div class="side-cat-box"><img src="귀여운고양이3.jpg" class="side-cat-img"></div>
+                <div class="side-cat-box"><img src="귀여운고양이도트3.jpg" class="side-cat-img"></div>
                 <div class="credit-esc">Press ESC to Close</div>
             </div>
             <div id="tutorial-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:5000; flex-direction:column; align-items:center; justify-content:center;">
@@ -958,7 +958,7 @@
         const turnCounter = document.getElementById('turn-counter');
         if(turnCounter) {
             if (turnCount > 0) {
-                const intensity = (turnCount) * 1.5; 
+                const intensity = (turnCount) * 15; // 내 턴 카운터 움직임 계수 15 반영
                 const tMoveX = (Math.random()-0.5) * intensity;
                 const tMoveY = (Math.random()-0.5) * intensity;
                 turnCounter.style.transform = `translate(${tMoveX}vh, ${tMoveY}vh)`;
