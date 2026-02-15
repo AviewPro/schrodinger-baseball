@@ -195,8 +195,8 @@
         .credit-logo { width: 67.5vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
         
-        /* 크레딧 데코레이션 이미지 */
-        .credit-deco { position: fixed; bottom: 5vh; width: 15vh; height: 15vh; object-fit: contain; pointer-events: none; z-index: 15001; }
+        /* 크레딧 데코레이션 이미지 수정: 크기 2.5배(37.5vh), 화면 정중앙 배치 */
+        .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 15001; }
         .credit-deco-left { left: 5vw; }
         .credit-deco-right { right: 5vw; }
 
@@ -311,6 +311,7 @@
     let isTutorial = false, tutorialStep = 0, currentTipType = "";
     let paradoxMusicTriggered = false, alarmTriggered = false, zeroOverlayTriggered = false;
     let currentVolume = 0.15;
+    let failLoopInterval = null; // 패배 효과음 루프용 변수
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
@@ -345,7 +346,8 @@
         currentVolume = parseFloat(val);
         bgm.volume = currentVolume; 
         meowSfx.volume = currentVolume; 
-        emergencySfx.volume = Math.min(1.0, currentVolume * 2.25); 
+        // 100% 확률 경고음 볼륨 2배로 강화
+        emergencySfx.volume = Math.min(1.0, currentVolume * 2.0); 
         failSfx.volume = Math.min(1.0, currentVolume * 1.5); 
         successSfx.volume = currentVolume;
         specialClickSfx.volume = Math.min(1.0, currentVolume * 3.0);
@@ -355,8 +357,8 @@
 
     function playClick() { 
         const sc = clickSfx.cloneNode(); 
-        // ENT, CLR, OBS 제외 버튼 클릭 소리 3배
-        sc.volume = Math.min(1.0, currentVolume * 3.0); 
+        // ENT, CLR, OBS 제외 버튼 클릭 소리 2배
+        sc.volume = Math.min(1.0, currentVolume * 2.0); 
         sc.play().catch(e=>{}); 
         if(bgm.paused) bgm.play().catch(e=>{}); 
     }
@@ -390,6 +392,7 @@
 
     function startGame() {
         playClick();
+        if(failLoopInterval) { clearInterval(failLoopInterval); failLoopInterval = null; }
         document.getElementById('setup').style.display = 'none';
         document.getElementById('setup-footer').style.display = 'none'; 
         document.getElementById('game-box').style.display = 'flex';
@@ -410,6 +413,7 @@
 
     function restartDirectly() {
         playClick();
+        if(failLoopInterval) { clearInterval(failLoopInterval); failLoopInterval = null; }
         bgm.pause();
         bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
         bgm.loop = true;
@@ -755,7 +759,14 @@
                 successSfx.play().catch(e=>{}); 
                 renderEndGame("Quantum Collapse", "승리", `관측 성공! 당신의 고양이는 살아있었습니다<br>당신은 고양이의 위치만을 알 수 있었습니다`, 'var(--green)', true, false);
             } else {
+                // 패배 시 6초마다 반복 재생 로직 추가
                 failSfx.play().catch(e=>{});
+                if(failLoopInterval) clearInterval(failLoopInterval);
+                failLoopInterval = setInterval(() => {
+                    failSfx.currentTime = 0;
+                    failSfx.play().catch(e=>{});
+                }, 6000);
+                
                 renderEndGame("Quantum Collapse", "패배", `관측 실패! 당신의 고양이는 사라졌습니다<br>당신은 고양이의 운동량만을 알 수 있었습니다`, 'var(--red)', false, false);
             }
         }
