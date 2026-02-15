@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Schrödinger Baseball - Single Mode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
             --bg: #050507; --cyan: #00f2ff; --purple: #bc13fe; --green: #00ff41; --red: #ff4b2b; 
@@ -52,9 +53,13 @@
         .setup-box-container { position: relative; width: 35vh; margin-bottom: 2vh; }
         .setup-cat { width: 35vh; height: 35vh; border-radius: 4vh; border: 0.4vh solid var(--green); object-fit: cover; animation: neonShift 10s infinite alternate linear; display: block; }
         
-        .setup-btn { width: 35vh; color: #000; font-weight: 900; height: 7vh; font-size: 2.2vh; border-radius: 1.5vh; cursor: pointer; border: none; animation: neonShiftBg 10s infinite alternate linear; margin-top: 1vh; }
+        .setup-btn { width: 35vh; color: #000; font-weight: 900; height: 7vh; font-size: 2.2vh; border-radius: 1.5vh; cursor: pointer; border: none; animation: neonShiftBg 10s infinite alternate linear; margin-top: 1vh; transition: transform 0.1s, filter 0.2s; }
+        .setup-btn:hover { transform: scale(1.02); filter: brightness(1.2); }
+        .setup-btn:active { transform: scale(0.98); }
+
         .tutorial-btn { width: 35vh; background: #444; color: #fff; font-weight: 700; height: 5vh; font-size: 1.8vh; border-radius: 1.5vh; cursor: pointer; border: 0.2vh solid #666; margin-bottom: 1vh; transition: 0.2s; }
-        .tutorial-btn:hover { background: #555; }
+        .tutorial-btn:hover { background: #555; transform: scale(1.02); }
+        .tutorial-btn:active { transform: scale(0.98); }
 
         .new-keyhole { width: 35vh; height: auto; margin-top: 1.5vh; animation: keyholeNeonShift 10s infinite alternate linear; }
 
@@ -66,15 +71,24 @@
         #log-window { flex-grow: 1; background: #000; overflow-y: auto; padding: 1vh; font-family: 'Consolas', monospace; margin-bottom: 1.5vh; border: 0.1vh inset #222; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 8.5vh; gap: 0px; align-content: start; }
         .log-item { padding: 0.5vh; display: flex; flex-direction: column; justify-content: center; background: rgba(0, 242, 255, 0.05); color: var(--cyan); border-bottom: 0.1vh solid #222; position: relative; box-sizing: border-box; text-align: center; }
         .log-item:nth-child(odd) { border-right: 0.1vh solid #333; }
-        .log-n { font-size: 3vh; font-weight: bold; display: block; letter-spacing: 0.2vh; color: #fff; }
+        .log-n { font-family: 'Orbitron', sans-serif; font-size: 3vh; font-weight: 900; display: block; letter-spacing: 0.2vh; color: #fff; }
         .log-sb { font-weight: bold; font-size: 1.8vh; color: var(--purple); margin-top: 0.2vh; }
         .log-out { color: #bc13fe; text-shadow: 0 0 1vh #bc13fe; }
 
         .chance-area { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5vh; gap: 2vh; height: 16vh; position: relative; }
         #chance-box { background: rgba(0,0,0,0.6); padding: 1vh; border-radius: 2vh; border: 0.2vh solid var(--purple); text-align: center; flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; transition: border-color 0.5s; z-index: 5; }
         .chance-title { font-size: 1.56vh; color: var(--purple); font-weight: bold; display: block; margin-bottom: 0.5vh; }
-        .chance-value { font-size: 5.85vh; font-weight: 900; color: var(--purple); text-shadow: 0 0 2.5vh var(--purple); font-family: 'Consolas', monospace; line-height: 1.1; }
-        .poison-text { font-size: 3vh; letter-spacing: -0.15vh; line-height: 1.0; font-weight: 900; } 
+        .chance-value { font-size: 5.85vh; font-weight: 900; color: var(--purple); text-shadow: 0 0 2.5vh var(--purple); font-family: 'Orbitron', sans-serif; line-height: 1.1; }
+        
+        .poison-text { 
+            font-size: 2.8vh; letter-spacing: -0.1vh; line-height: 1.1; font-weight: 900; 
+            display: inline-block;
+            animation: floatingText 3s infinite ease-in-out;
+        } 
+        @keyframes floatingText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-0.8vh); }
+        }
 
         .prob-cat-container { position: relative; width: 16vh; height: 16vh; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .prob-cat { width: 100%; height: 100%; border-radius: 2.5vh; border: 0.2vh solid var(--purple); object-fit: cover; box-sizing: border-box; z-index: 1; }
@@ -85,9 +99,16 @@
         #cand-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vh; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 2vh; color: #fff; scrollbar-width: none; }
         .cand-item { padding: 0.8vh; text-align: center; background: rgba(255,255,255,0.07); border-radius: 1vh; transition: none; will-change: transform; }
 
-        .input-view { background: #000; font-size: 4.5vh; text-align: center; height: 9vh; line-height: 9vh; border-radius: 1.2vh; margin-bottom: 2vh; color: #fff; border: 0.1vh inset #222; letter-spacing: 1.5vh; font-weight: bold; }
+        .input-view { 
+            background: #000; font-family: 'Orbitron', sans-serif; font-size: 4.5vh; text-align: center; height: 9vh; 
+            line-height: 9vh; border-radius: 1.2vh; margin-bottom: 2vh; color: #fff; border: 0.1vh inset #222; 
+            letter-spacing: 1.5vh; font-weight: 900; text-shadow: 0 0 1vh var(--cyan);
+        }
+
         .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vh; }
-        button { background: #222; border: none; color: #fff; padding: 1.8vh 0; border-radius: 1vh; cursor: pointer; font-size: 2.4vh; box-shadow: 0.2vh 0.2vh 0.5vh rgba(0,0,0,0.5); }
+        button { background: #222; border: none; color: #fff; padding: 1.8vh 0; border-radius: 1vh; cursor: pointer; font-size: 2.4vh; box-shadow: 0.2vh 0.2vh 0.5vh rgba(0,0,0,0.5); transition: background 0.2s, transform 0.1s, filter 0.2s; }
+        button:hover:not(:disabled) { filter: brightness(1.3); transform: translateY(-0.2vh); }
+        button:active:not(:disabled), button.active { transform: translateY(0.2vh); filter: brightness(0.8); }
         button:disabled { opacity: 0.1; cursor: not-allowed; }
         
         .btn-clr { background: var(--cyan) !important; color: #000 !important; font-weight: bold; border: 0.2vh solid rgba(255,255,255,0.4); box-shadow: inset 0 0 1vh rgba(255,255,255,0.5), 0 0 1.5vh var(--cyan); font-size: 2vh !important; }
@@ -116,7 +137,7 @@
             box-shadow: 0 0 10vh rgba(0, 0, 0, 1);
         }
 
-        #setup-footer { margin-top: 2vh; font-size: 1.2vh; color: #888; text-align: center; z-index: 300; }
+        #setup-footer { margin-top: 2vh; font-size: 1.3vh; color: #888; text-align: center; z-index: 300; line-height: 1.6; }
 
         #tutorial-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -171,13 +192,21 @@
             transition: none;
             pointer-events: none;
         }
-        .credit-logo { width: 45vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
+        .credit-logo { width: 67.5vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; }
 
         #flash-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
         }
-        #dead-x { display: none; position: absolute; top: 62%; left: 50%; transform: translate(-50%, -50%); font-size: 30vh; color: var(--red); font-weight: 900; opacity: 0.6; z-index: 100; pointer-events: none; }
+        #dead-x { display: none; position: absolute; top: 62%; left: 50%; transform: translate(-50%, -50%); font-size: 30vh; color: var(--green); text-shadow: 0 0 4vh var(--green), 0 0 8vh var(--green); font-weight: 900; opacity: 0.8; z-index: 100; pointer-events: none; }
+
+        /* 패러독스 배경 이모지 애니메이션 수정 (40초 주기, 긴 행렬) */
+        .emoji-lane {
+            position: fixed; white-space: nowrap; font-size: 5vh; pointer-events: none; z-index: 5; opacity: 0.6;
+        }
+        @keyframes slide-h { from { transform: translateX(-150%); } to { transform: translateX(150vw); } }
+        @keyframes slide-v { from { transform: translateY(150vh); } to { transform: translateY(-150%); } }
+        @keyframes slide-d { from { transform: translate(-150%, 150vh); } to { transform: translate(150vw, -150%); } }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false">
@@ -222,7 +251,7 @@
 
 <div id="setup-footer">
     이 게임은 제미나이와 그록을 이용하여 제작되었습니다.<br>
-    배경음악은 ErikMMusic의 NCS를 사용했습니다.
+    저작권은 나한테 있나? 잘 모르겠습니다. 그냥 가볍게 즐겨주세요.
 </div>
 
 <div class="game-container">
@@ -231,13 +260,13 @@
         <div id="log-window"></div>
         <div class="input-view" id="display">----</div>
         <div class="keypad" id="main-keypad">
-            <button class="key-btn" onclick="press('7')">7</button><button class="key-btn" onclick="press('8')">8</button><button class="key-btn" onclick="press('9')">9</button>
+            <button class="key-btn" data-key="7" onclick="press('7')">7</button><button class="key-btn" data-key="8" onclick="press('8')">8</button><button class="key-btn" data-key="9" onclick="press('9')">9</button>
             <button id="obs-btn" class="btn-obs" onclick="clickObs()">OBS</button>
-            <button class="key-btn" onclick="press('4')">4</button><button class="key-btn" onclick="press('5')">5</button><button class="key-btn" onclick="press('6')">6</button>
+            <button class="key-btn" data-key="4" onclick="press('4')">4</button><button class="key-btn" data-key="5" onclick="press('5')">5</button><button class="key-btn" data-key="6" onclick="press('6')">6</button>
             <button id="clr-btn" class="btn-clr" onclick="clickSpecial('CLR')">CLR</button>
-            <button class="key-btn" onclick="press('1')">1</button><button class="key-btn" onclick="press('2') bridge" onclick="press('2')">2</button><button class="key-btn" onclick="press('3')">3</button>
+            <button class="key-btn" data-key="1" onclick="press('1')">1</button><button class="key-btn" data-key="2" onclick="press('2')">2</button><button class="key-btn" data-key="3" onclick="press('3')">3</button>
             <button id="ent-btn" class="btn-ent" onclick="clickSpecial('ENT')">ENT</button>
-            <button id="zero-btn" style="grid-column: span 3" onclick="press('0')">0</button>
+            <button id="zero-btn" data-key="0" style="grid-column: span 3" onclick="press('0')">0</button>
         </div>
     </div>
 
@@ -267,7 +296,7 @@
         <p style="color:var(--purple); font-size:2vh;">양자고양이의 좌표를 관측하세요!</p>
         <input type="tel" id="obs-num" maxlength="4" autocomplete="off"
                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-               style="background:#000; color:#fff; font-size:5vh; text-align:center; width:35vh; margin:4vh 0; border:0.3vh solid var(--purple); border-radius:1.5vh; letter-spacing:1.5vh;">
+               style="background:#000; color:#fff; font-family: 'Orbitron', sans-serif; font-size: 5vh; text-align:center; width:35vh; margin:4vh 0; border:0.3vh solid var(--purple); border-radius:1.5vh; letter-spacing:1.5vh; text-shadow: 0 0 1vh var(--purple);">
         <button onclick="submitObs()" style="padding:2.5vh 8vh; background:var(--purple); color:#fff; font-weight:bold; font-size:2.5vh; border-radius:1.5vh;">관측 실행</button>
     </div>
 </div>
@@ -290,6 +319,8 @@
 
     const originalBodyContent = document.body.innerHTML;
 
+    let poisonInterval = null;
+
     const tipsData = {
         fail: [
             { title: "실패 시 참고팁 (1/3)", desc: "계속 실패하고 있다면 처음에 1234, 5678을 입력하고 나머지는 아무렇게나 입력해도 마지막 관측확률이 체감상 30%정도 되는 것 같았습니다." },
@@ -300,8 +331,8 @@
             { title: "성공 시 참고팁 (1/5)", desc: "눈치를 못채셨을 수도 있지만 이 게임은 관측에 성공을 하든 실패를 하든\nQuatum Collapse 라는 엔딩이 나오죠. \n그렇게 한 것은 두 가지 모두 이 게임의 목표가 아니기 때문입니다." },
             { title: "성공 시 참고팁 (2/5)", desc: "단순히 성공을 하는거 자체는 너무 난이도가 낮으니까요. \n이 게임은 정확히 6번만에 100%로 양자고양이의 위치를 특정하고 \n7번째 측정까지 진행해서 양자고양이를 잡는 게임입니다." },
             { title: "성공 시 참고팁 (3/5)", desc: "그리고 게임에서 일반 숫자야구의 팁은 큰 도움이 안 될수도 있습니다. \n양자고양이는 계속해서 최대한 안전해보이는 위치로 도망칩니다. \n정확히는 볼카운트를 가능한 후보숫자가 가장 많은 쪽으로 내준다는 의미죠." },
-            { title: "성공 시 참고팁 (4/5)", desc: "그렇다고 해도 고정된 알고리즘이기 때문에 똑같은 질문을 100번하면 100번 똑같이 답하게 되어있죠. 스스로 빌드를 만들어서 가장 높은 확률만 보고 달려가면 점점 최적화 될 수 밖에 없는 구조입니다." },
-            { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 패러독스 엔딩을 보겠다는 건가요? \n그렇다면 환영입니다." }
+            { title: "성공 시 참고팁 (4/5)", desc: "고정된 알고리즘이기 때문에 똑같은 질문을 100번 하면 100번 똑같이 답합니다. \n일정한 빌드를 만들어서 가장 높은 확률을 따라가면 최적화되는 구조입니다." },
+            { title: "성공 시 참고팁 (5/5)", desc: "어차피 깨봤자 개발자의 허접한 감상문 말곤 아무것도 없는데 \n진짜 굳이 패러독스 엔딩을 보겠다는 건가요? \n그렇다면 환영입니다." }
         ]
     };
 
@@ -309,26 +340,47 @@
         currentVolume = parseFloat(val);
         bgm.volume = currentVolume; 
         meowSfx.volume = currentVolume; 
-        // 100% 경보음 50% 상향 조정
-        emergencySfx.volume = Math.min(1.0, currentVolume * 1.5); 
+        emergencySfx.volume = Math.min(1.0, currentVolume * 2.25); 
         failSfx.volume = Math.min(1.0, currentVolume * 1.5); 
         successSfx.volume = currentVolume;
-        specialClickSfx.volume = currentVolume;
+        specialClickSfx.volume = Math.min(1.0, currentVolume * 3.0);
     }
     
     adjustVolume(0.15);
 
-    function playClick() { const sc = clickSfx.cloneNode(); sc.play().catch(e=>{}); bgm.play().catch(e=>{}); }
+    function playClick() { 
+        const sc = clickSfx.cloneNode(); 
+        sc.volume = currentVolume; 
+        sc.play().catch(e=>{}); 
+        if(bgm.paused) bgm.play().catch(e=>{}); 
+    }
+
     function playSpecialClick() { 
         const sc = specialClickSfx.cloneNode(); 
-        sc.volume = currentVolume;
-        sc.play().catch(e=>{}); 
+        sc.volume = Math.min(1.0, currentVolume * 3.0);
+        sc.play().catch(e=>{ console.log("Special Click Sound Error:", e); }); 
+    }
+
+    // 키보드 입력 시 버튼 시각 효과 함수
+    function simulateButtonPress(btnId) {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 100);
+        }
     }
 
     function clickSpecial(type) {
-        playSpecialClick();
-        if(type === 'CLR') clearIn(true);
-        if(type === 'ENT') clickEnter(true);
+        if(type === 'CLR') {
+            simulateButtonPress('clr-btn');
+            playSpecialClick();
+            clearIn(true);
+        }
+        if(type === 'ENT') {
+            simulateButtonPress('ent-btn');
+            playSpecialClick();
+            clickEnter(true);
+        }
     }
 
     function startGame() {
@@ -343,6 +395,7 @@
     function resetGameState() {
         aiCandidates = []; history = []; inputStr = ""; turnCount = 7; 
         paradoxMusicTriggered = false; alarmTriggered = false; zeroOverlayTriggered = false;
+        if(poisonInterval) { clearInterval(poisonInterval); poisonInterval = null; }
         for(let i=0; i<=9999; i++){
             let n = i.toString().padStart(4, '0');
             if(new Set(n).size === 4) aiCandidates.push(n);
@@ -470,17 +523,33 @@
 
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            if (document.getElementById('credit-overlay').style.display === 'flex') { closeCredits(); return; }
+            if (document.getElementById('credit-overlay')?.style.display === 'flex') { closeCredits(); return; }
             if (isTutorial) location.reload();
-            if (document.getElementById('obs-overlay').style.display === 'flex') { document.getElementById('obs-overlay').style.display = 'none'; }
+            if (document.getElementById('obs-overlay')?.style.display === 'flex') { document.getElementById('obs-overlay').style.display = 'none'; }
             return;
         }
-        if (document.getElementById('obs-overlay').style.display === 'flex') {
+        if (document.getElementById('obs-overlay')?.style.display === 'flex') {
             if (e.key === 'Enter') submitObs(); return;
         }
-        if (e.key >= '0' && e.key <= '9') press(e.key);
-        if (e.key === 'Enter') clickSpecial('ENT');
-        if (e.key === 'Delete' || e.key === 'Backspace') clickSpecial('CLR');
+        
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            clickSpecial('ENT');
+            return;
+        }
+        
+        if (e.key >= '0' && e.key <= '9') {
+            // 키보드 입력 시 해당 숫자 버튼 시각 효과
+            const btn = document.querySelector(e.key === '0' ? '#zero-btn' : `.key-btn[data-key="${e.key}"]`);
+            if(btn) { btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 100); }
+            press(e.key);
+            return;
+        }
+        
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+            clickSpecial('CLR');
+            return;
+        }
     });
 
     function press(n) { 
@@ -532,6 +601,26 @@
         return { s: parseInt(match[1]), b: parseInt(match[2]) };
     }
 
+    function startPoisonLoop() {
+        if(poisonInterval) return;
+        const targetText = "Cat is Poisoned in the Box";
+        const el = document.getElementById('chance-val');
+        let index = targetText.length;
+        let isDeleting = true;
+
+        poisonInterval = setInterval(() => {
+            if (isDeleting) {
+                el.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">${targetText.substring(0, index)}</span>`;
+                index--;
+                if (index < 0) { isDeleting = false; }
+            } else {
+                el.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">${targetText.substring(0, index)}</span>`;
+                index++;
+                if (index > targetText.length) { isDeleting = true; }
+            }
+        }, 150);
+    }
+
     function updateUI() {
         const turnCounter = document.getElementById('turn-counter');
         turnCounter.innerText = turnCount;
@@ -556,15 +645,17 @@
                 flashOverlay.style.opacity = '1';
                 setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
                 zeroOverlayTriggered = true;
+                startPoisonLoop();
             }
             chanceTitleEl.style.display = 'none';
-            chanceValEl.innerHTML = `<span class="poison-text" style="color:var(--green); text-shadow: 0 0 1.5vh var(--green);">Cat is Poisoned<br>in the Box</span>`; 
             chanceBoxEl.style.borderColor = 'var(--green)';
             catImg.style.opacity = '0'; catImg.style.filter = 'blur(2vh)';
             turnCounter.style.color = 'var(--green)'; turnCounter.style.textShadow = '0 0 2vh var(--green)';
             deadX.style.display = 'block'; 
         } else {
             deadX.style.display = 'none';
+            if(poisonInterval) { clearInterval(poisonInterval); poisonInterval = null; }
+
             if (prob === 100) {
                 chanceValEl.style.color = 'var(--red)';
                 chanceValEl.style.textShadow = '0 0 2.5vh var(--red)';
@@ -575,6 +666,10 @@
                     setTimeout(() => { flashOverlay.style.opacity = '0'; }, 1500);
                     alarmTriggered = true;
                 }
+            } else if (prob >= 10 && prob <= 51) {
+                chanceValEl.style.color = 'var(--cyan)';
+                chanceValEl.style.textShadow = '0 0 2.5vh var(--cyan)';
+                alarmTriggered = false;
             } else {
                 chanceValEl.style.color = 'var(--purple)';
                 chanceValEl.style.textShadow = '0 0 2.5vh var(--purple)';
@@ -584,12 +679,13 @@
             chanceTitleEl.style.display = 'block';
             chanceTitleEl.innerText = "Measuring Energy Level";
             chanceValEl.innerText = prob.toFixed(2) + "%";
-            chanceBoxEl.style.borderColor = prob === 100 ? 'var(--red)' : 'var(--purple)';
-            turnCounter.style.color = prob === 100 ? 'var(--red)' : 'var(--purple)';
+            chanceBoxEl.style.borderColor = (prob === 100) ? 'var(--red)' : (prob >= 10 && prob <= 51 ? 'var(--cyan)' : 'var(--purple)');
+            turnCounter.style.color = (prob === 100) ? 'var(--red)' : (prob >= 10 && prob <= 51 ? 'var(--cyan)' : 'var(--purple)');
             const blurAmount = Math.max(0, (prob * 0.05));
             const opacityAmount = Math.max(0.1, 1 - (prob / 100));
             catImg.style.display = 'block'; catImg.style.opacity = opacityAmount;
-            catImg.style.filter = `blur(${blurAmount}vh)`; catImg.style.borderColor = prob === 100 ? 'var(--red)' : 'var(--purple)';
+            catImg.style.filter = `blur(${blurAmount}vh)`; 
+            catImg.style.borderColor = (prob === 100) ? 'var(--red)' : (prob >= 10 && prob <= 51 ? 'var(--cyan)' : 'var(--purple)');
         }
         
         document.getElementById('log-window').innerHTML = history.map(h => {
@@ -610,7 +706,7 @@
             statusEl.style.color = "var(--red)";
         } else {
             entBtn.disabled = false;
-            statusEl.innerText = "양자고양이 좌표 측정 중";
+            statusEl.innerText = "고양이 위치 관측 중...";
             statusEl.style.color = "var(--cyan)";
         }
     }
@@ -643,7 +739,7 @@
         }
         renderProbabilityCloud();
         document.getElementById('obs-overlay').style.display = 'flex';
-        setTimeout(() => { const obsInput = document.getElementById('obs-num'); obsInput.value = ""; obsInput.focus(); }, 10);
+        setTimeout(() => { const obsInput = document.getElementById('obs-num'); if(obsInput){ obsInput.value = ""; obsInput.focus(); } }, 10);
     }
 
     function submitObs() {
@@ -667,14 +763,27 @@
         const loseImg = "box.gif";
         let mediaUrl = isParadox ? paradoxGif : (isWin ? winGif : loseImg);
         
+        let emojiLanes = "";
+        if(isParadox) {
+            // 긴 행렬(22마리) 및 40초 주기 설정
+            const longLane = "🐈 ".repeat(22);
+            emojiLanes = `
+                <div class="emoji-lane" style="top:15vh; animation: slide-h 40s linear infinite;">${longLane}</div>
+                <div class="emoji-lane" style="bottom:15vh; animation: slide-h 45s linear infinite reverse;">${longLane}</div>
+                <div class="emoji-lane" style="left:10vw; animation: slide-v 38s linear infinite;">${longLane.split(' ').join('<br>')}</div>
+                <div class="emoji-lane" style="right:10vw; animation: slide-v 42s linear infinite reverse;">${longLane.split(' ').join('<br>')}</div>
+                <div class="emoji-lane" style="top:0; left:0; animation: slide-d 50s linear infinite;">${longLane}</div>
+                <div class="emoji-lane" style="top:0; right:0; transform: scaleX(-1); animation: slide-d 55s linear infinite;">${longLane}</div>
+            `;
+        }
+
         let subButtons = "";
         if (isParadox) {
-            subButtons = `
-                <button onclick="window.showCredits()" style="width:65vh; padding:4vh 0; margin-top:5vh; background:#222; color:var(--green); border:0.4vh solid var(--green); cursor:pointer; font-size:4vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh var(--green);">Credits</button>`;
+            subButtons = `<button onclick="window.showCredits()" style="width:65vh; padding:4vh 0; margin-top:5vh; background:#222; color:var(--green); border:0.4vh solid var(--green); cursor:pointer; font-size:4vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh var(--green); z-index:100;">Credits</button>`;
         } else {
             const tipType = isWin ? 'success' : 'fail';
             subButtons = `
-                <div style="display:flex; flex-direction:column; gap: 1.5vh; align-items: center; margin-top:3vh; width: 62vh;">
+                <div style="display:flex; flex-direction:column; gap: 1.5vh; align-items: center; margin-top:3vh; width: 62vh; z-index:100;">
                     <button onclick="window.showTips('${tipType}')" style="width:100%; padding:2.5vh 0; background:#333; color:${color}; border:0.2vh solid ${color}; cursor:pointer; font-size:2.8vh; border-radius:1.5vh; font-weight:bold;">TIPS</button>
                     <div style="display:flex; gap: 2vh; width: 100%;">
                         <button onclick="location.reload()" style="flex:1; padding:2vh 0; background:#222; color:#fff; border:0.2vh solid #444; cursor:pointer; font-size:2.2vh; border-radius:1.5vh;">Main Menu</button>
@@ -684,6 +793,7 @@
         }
 
         document.body.innerHTML = `
+            ${emojiLanes}
             <div id="sound-control" style="z-index:20000;">
                 <span class="sound-icon">♪</span>
                 <input type="range" id="volume-slider-end" min="0" max="1" step="0.01" value="${currentVolume}" oninput="adjustVolume(this.value)">
@@ -703,9 +813,9 @@
                     <div id="tut-esc-guide" class="esc-guide" style="display:none;"></div>
                 </div>
             </div>
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; box-sizing: border-box;">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; box-sizing: border-box; position:relative; z-index:50;">
                 <img src="${mediaUrl}" style="border:0.4vh solid ${color}; border-radius:4vh; box-shadow: 0 0 3vh ${color}; width: 45vh; height: 45vh; object-fit: cover; margin-bottom: 2vh;">
-                <h1 style="font-size:7vh; color:${color}; margin: 1vh 0;">${type}</h1>
+                <h1 style="font-size:7vh; color:${color}; margin: 1vh 0; text-shadow:0 0 2vh ${color};">${type}</h1>
                 <h2 style="font-size:4vh; color:#fff; margin-bottom: 1vh;">${result}</h2>
                 <p style="color:#aaa; font-size:2.2vh; max-width:80vh; line-height:1.4; margin: 1vh 0;">${msg}</p>
                 ${subButtons}
@@ -729,26 +839,20 @@
 사실 보잘것 없는 게임이지만, 어릴 때부터 꿈꾸던 '나만의 게임 만들기'를 
 드디어 해볼 수 있어서 만드는 내내 정말 즐거웠습니다.
 
-
 이 게임의 원래 아이디어는 가짜 숫자야구게임의 변형룰에서 시작됐습니다. 처음엔 사람간에 치열한 두뇌 게임을 생각했죠. 수비자가 제한없이 거짓말을 할 수 있고, 공격자는 '이거는 말이 안 된다!' 싶을 때 '모순'을 선언해서 끝내는 방식이었거든요. 반대로 수비자는 모순이 아니라는 걸 '반증'하면 이기는 거고요.
 
-
 근데 막상 혼자 시뮬레이션을 돌려보니까 생각보다 어렵더라고요. 단 4턴 만에 논리적으로 앞뒤가 안 맞는 상황이 오기도 하고, 완벽하게 거짓말을 섞어가며 카운트를 준다는 게 생각보다 엄청난 사고력을 필요로 한다는 걸 깨달았습니다. 그래서 제미나이랑 "완벽하게 거짓말하는 상대를 이기려면 몇 번이나 걸릴까?" 라는 질문에서 지금의 게임이 구상되었습니다.
-
 
 이름도 처음엔 '패러독스 베이스볼' 같은 걸 생각했는데, "슈뢰딩거 베이스볼"이 꽂히더라고요. 
 모든 숫자의 가능성이 중첩되어 있다가, 관측하면 할수록 가능성이 줄어들고 
 결국 하나의 숫자로 정해지는 컨셉! 제가 원하던 느낌이랑 딱 맞아떨어져서 파바박하고 만들어봤습니다.
 
-
 사실 전 프로그래밍 지식이 제로에 가까워서 AI를 쓴다고 해도 이렇게 빠르게 될 줄은 몰랐습니다. 
 구상에 반나절, 코드 짜는 데 하루 정도 걸렸는데, 막히는 걸 바로바로 물어보면서 
 코드를 만들어갈 수 있어서 빨랐던 것 같습니다.
 
-
 마음 같아서는 '개쳐귀여운 고양이' 이미지랑 컨셉을 막 쏟아붓고 싶었는데... 이게 생각보다 어렵더라고요. 
 이미지를 찾아도 게임에 넣으니깐 제가 원하는 느낌이 안 살아서 결국 지금같은 모습이 됐습니다. 
-
 
 세상이 참 빠르게 변하는 것 같습니다. 앞으로도 재밌는 아이디어가 떠오르면 게임을 만들어 보겠습니다. 
 어쩌면 슈뢰딩거 베이스볼 PVP버젼도 만들 수 있을 것 같습니다.
@@ -758,7 +862,6 @@
         
         content.innerHTML = `<div>${text}</div><img src="Aview.png" class="credit-logo">`;
         overlay.style.display = 'flex';
-        
         creditY = window.innerHeight;
         creditSpeed = 1;
         
@@ -772,16 +875,8 @@
         }, 16);
     };
 
-    window.accelerateCredits = function(e) {
-        if(e) e.stopPropagation(); 
-        creditSpeed = 5;
-    };
-
-    window.normalizeCredits = function(e) {
-        if(e) e.stopPropagation();
-        creditSpeed = 1;
-    };
-
+    window.accelerateCredits = function(e) { if(e) e.stopPropagation(); creditSpeed = 5; };
+    window.normalizeCredits = function(e) { if(e) e.stopPropagation(); creditSpeed = 1; };
     window.closeCredits = function() {
         const overlay = document.getElementById('credit-overlay');
         if(overlay) {
