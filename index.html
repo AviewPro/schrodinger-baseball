@@ -30,7 +30,7 @@
             -webkit-user-select: none;
         }
 
-        /* 버전 표기 스타일 - 폰트 크기 2배 확대 */
+        /* 버전 표기 스타일 - 폰트 크기 2배 확대 유지 */
         #version-tag {
             position: fixed;
             bottom: 1.5vh;
@@ -183,10 +183,9 @@
         }
         .tutorial-dim { opacity: 0.2 !important; pointer-events: none !important; }
 
-        /* 엔딩 크레딧 레이어 수정: 이미지를 반투명 검은 배경 뒤에 배치 */
         #credit-overlay { 
             display: none; position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: rgba(0,0,0,0.5); z-index: 15000; flex-direction: column; align-items: center; overflow: hidden;
+            background: rgba(0,0,0,0.95); z-index: 15000; flex-direction: column; align-items: center; overflow: hidden;
         }
         #credit-container {
             position: relative;
@@ -194,7 +193,7 @@
             height: 100%;
             border-left: 0.2vh solid rgba(255,255,255,0.3);
             border-right: 0.2vh solid rgba(255,255,255,0.3);
-            background: rgba(0,0,0,0.98); /* 중앙 텍스트 영역은 어둡게 유지 */
+            background: rgba(0,0,0,0.98);
             display: flex;
             justify-content: center;
             overflow: hidden;
@@ -206,23 +205,13 @@
             font-size: 2.1vh; line-height: 2.2; white-space: pre-wrap; padding: 10vh 0;
             transition: none;
             pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .credit-logo { width: 16.875vh; height: auto; margin-top: 5vh; filter: brightness(0) invert(1); opacity: 0.8; }
+        /* Aview.png 크기 20% 확대 (기존 대비 1.2배) */
+        .credit-logo { width: 20.25vh; height: auto; margin-top: 3vh; filter: brightness(0) invert(1); opacity: 0.8; }
         .credit-esc { position: fixed; bottom: 3vh; right: 3vh; color: #666; font-size: 1.5vh; z-index: 15003; }
-        
-        /* 반투명 배경 뒤에 위치하도록 z-index 조정 */
-        .credit-deco { position: fixed; top: 50%; transform: translateY(-50%); width: 37.5vh; height: 37.5vh; object-fit: contain; pointer-events: none; z-index: 14999; }
-        
-        .credit-deco-left { 
-            left: 5vw; 
-            -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%); 
-            mask-image: linear-gradient(to left, black 40%, transparent 100%); 
-        }
-        .credit-deco-right { 
-            right: 5vw; 
-            -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%); 
-            mask-image: linear-gradient(to right, black 40%, transparent 100%); 
-        }
 
         #flash-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 20000; opacity: 0; transition: opacity 1.5s ease;
@@ -248,8 +237,6 @@
 </div>
 
 <div id="credit-overlay">
-    <img src="도트고양이.gif" class="credit-deco credit-deco-left">
-    <img src="도트고양이3.gif" class="credit-deco credit-deco-right">
     <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
         <div id="credit-content"></div>
     </div>
@@ -338,7 +325,7 @@
     let currentVolume = 0.15;
     let failLoopInterval = null; 
     let successLoopInterval = null; 
-    let meowLoopInterval = null; // 패러독스 엔딩용 야옹 루프 추가
+    let meowLoopInterval = null; 
     
     let bgm = new Audio("002. ErikMMusic - The Dusty Attic.mp3");
     bgm.loop = true;
@@ -371,14 +358,14 @@
 
     function adjustVolume(val) { 
         currentVolume = parseFloat(val);
-        // 패러독스 BGM(SoundHelix-Song-8.mp3) 볼륨 20% 키움 (기존 0.3 -> 0.36)
+        // 패러독스 BGM(SoundHelix-Song-8.mp3) 볼륨 20% 추가 상향 (0.36 -> 0.432)
         if (bgm.src.includes("SoundHelix-Song-8.mp3")) {
-            bgm.volume = Math.min(1.0, currentVolume * 0.36);
+            bgm.volume = Math.min(1.0, currentVolume * 0.432);
         } else {
             bgm.volume = currentVolume; 
         }
-        // 패러독스 야옹 소리 볼륨 30% 키움 (기존 1.0 -> 1.3 계수 적용 후 min 처리)
-        meowSfx.volume = Math.min(1.0, currentVolume * 1.3); 
+        // 패러독스 고양이 효과음 볼륨 10% 하향 (1.3 -> 1.17 계수 적용)
+        meowSfx.volume = Math.min(1.0, currentVolume * 1.17); 
         emergencySfx.volume = Math.min(1.0, currentVolume * 4.0); 
         failSfx.volume = Math.min(1.0, currentVolume * 3.0); 
         successSfx.volume = currentVolume;
@@ -397,7 +384,7 @@
     function playSpecialClick() { 
         const sc = specialClickSfx.cloneNode(); 
         sc.volume = Math.min(1.0, currentVolume * 3.0);
-        sc.play().catch(e=>{ console.log("Special Click Sound Error:", e); }); 
+        sc.play().catch(e=>{}); 
     }
 
     function simulateButtonPress(btnId) {
@@ -680,8 +667,7 @@
                 bgm.pause();
                 bgm = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
                 bgm.loop = true;
-                // BGM 볼륨 20% 키움 (0.3 -> 0.36)
-                bgm.volume = Math.min(1.0, currentVolume * 0.36);
+                bgm.volume = Math.min(1.0, currentVolume * 0.432); // BGM 20% 추가 상향
                 bgm.play().catch(e => {});
                 paradoxMusicTriggered = true;
             }
@@ -778,9 +764,8 @@
         if(isTutorial) return;
         playSpecialClick();
         if(aiCandidates.length === 0) {
-            meowSfx.volume = Math.min(1.0, currentVolume * 1.3); // 야옹 소리 30% 증가
+            meowSfx.volume = Math.min(1.0, currentVolume * 1.17); // 1.3에서 10% 하향
             meowSfx.play().catch(e=>{}); 
-            // 6초마다 야옹 루프 추가
             if(meowLoopInterval) clearInterval(meowLoopInterval);
             meowLoopInterval = setInterval(() => {
                 meowSfx.currentTime = 0;
@@ -863,8 +848,6 @@
                 <span class="sound-icon" style="font-size:1vh;">VOL</span>
             </div>
             <div id="credit-overlay">
-                <img src="도트고양이.gif" class="credit-deco credit-deco-left">
-                <img src="도트고양이3.gif" class="credit-deco credit-deco-right">
                 <div id="credit-container" onmousedown="accelerateCredits(event)" onmouseup="normalizeCredits(event)">
                     <div id="credit-content"></div>
                 </div>
@@ -925,7 +908,12 @@
 
 -AVIEW-`;
         
-        content.innerHTML = `<div>${text}</div><img src="귀여운고양이.jpg" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh;"><img src="Aview.png" class="credit-logo">`;
+        // 귀여운고양이.jpg 아래에 Aview.png가 자연스럽게 배치되도록 수정
+        content.innerHTML = `
+            <div>${text}</div>
+            <img src="귀여운고양이.jpg" style="width:67.5vh; height:auto; margin-top:5vh; border-radius:2vh;">
+            <img src="Aview.png" class="credit-logo">
+        `;
         overlay.style.display = 'flex';
         creditY = window.innerHeight;
         creditSpeed = 1;
