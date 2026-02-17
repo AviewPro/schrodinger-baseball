@@ -939,12 +939,15 @@
                 const ed = _0xtextData.endings.win;
                 _0xrnEG(ed.type, ed.result, ed.message, 'var(--cyan)', true, false);
             } else {
-                _0xfailSfx.play().catch(e=>{});
                 if(_0xfailLoopInterval) clearInterval(_0xfailLoopInterval);
-                _0xfailLoopInterval = setInterval(() => {
+                setTimeout(() => {
                     _0xfailSfx.currentTime = 0;
                     _0xfailSfx.play().catch(e=>{});
-                }, 6000);
+                    _0xfailLoopInterval = setInterval(() => {
+                        _0xfailSfx.currentTime = 0;
+                        _0xfailSfx.play().catch(e=>{});
+                    }, 6000);
+                }, 5000);
                 
                 const ed = _0xtextData.endings.lose;
                 _0xrnEG(ed.type, ed.result, ed.message, 'var(--red)', false, false);
