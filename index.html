@@ -657,7 +657,7 @@
             return;
         }
         
-        if (e.key >= '0' && e.key <= '9') {
+        if (e.key === '0' || (e.key >= '1' && e.key <= '9')) {
             const btn = document.querySelector(e.key === '0' ? '#zero-btn' : `.key-btn[data-key="${e.key}"]`);
             if(btn) { btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 100); }
             _0x9b8a(e.key);
@@ -820,7 +820,7 @@
                 currentShadow = '0 0 2.5vh var(--cyan)';
                 _0xalarmTriggered = false;
             } else {
-                _0alarmTriggered = false;
+                _0xalarmTriggered = false;
             }
 
             chanceValEl.style.color = currentColor;
@@ -926,7 +926,9 @@
         if(guess.length === 4) {
             _0xplayClick();
             let realSecret = _0xaiCandidates[Math.floor(Math.random() * _0xaiCandidates.length)];
-            if(guess === realSecret) {
+            const prob = 1 / _0xaiCandidates.length * 100;
+            
+            if(guess === realSecret && prob === 100) {
                 _0xsuccessSfx.play().catch(e=>{});
                 if(_0xsuccessLoopInterval) clearInterval(_0xsuccessLoopInterval);
                 _0xsuccessLoopInterval = setInterval(() => {
@@ -969,7 +971,7 @@
 
         let subButtons = "";
         if (isParadox) {
-            subButtons = `<button onclick="window.showCredits()" style="font-family: 'Bebas Neue', cursive; width:65vh; padding:2vh 0; margin-top:5vh; background:#222; color:${color}; border:0.4vh solid ${color}; cursor:pointer; font-size:5vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh ${color}; z-index:100; letter-spacing:0.3vh;">Credits</button>`;
+            subButtons = `<button onclick="localStorage.setItem('totalStartCount', 0); _0xtotalStartCount = 0; window.showCredits()" style="font-family: 'Bebas Neue', cursive; width:65vh; padding:2vh 0; margin-top:5vh; background:#222; color:${color}; border:0.4vh solid ${color}; cursor:pointer; font-size:5vh; border-radius:2vh; font-weight:bold; box-shadow: 0 0 2vh ${color}; z-index:100; letter-spacing:0.3vh;">Credits</button>`;
         } else {
             const tipType = isWin ? 'success' : 'fail';
             subButtons = `
@@ -1044,7 +1046,7 @@
         _0xcrdScrInt = setInterval(() => {
             _0xcrdY -= _0xcrdSpd;
             content.style.transform = `translateY(${_0xcrdY}px)`;
-            if (_0xcrdY < -(content.scrollHeight + 5)) {
+            if (_0xcrdY < -(content.scrollHeight + 25)) {
                 clearInterval(_0xcrdScrInt);
             }
         }, 16);
